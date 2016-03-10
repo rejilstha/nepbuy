@@ -1,5 +1,5 @@
 <?php
-	//list of products of a shop
+	///list of products of a shop
     $shop;
     $products;
 	$trader;
