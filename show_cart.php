@@ -1,5 +1,5 @@
 <?php
-	//collect cart data from database
+	///collect cart data from database
 ?>
 <?php
 	$total = 0;
