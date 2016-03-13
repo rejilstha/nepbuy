@@ -1,71 +1,171 @@
 <?php
+	include("connection.php");
+
 	//detail information of product
-    $product;
-	$shop;
-	$product_type;
-	$user;
-	if(isset($_POST)){
-		add_to_cart($user["pk_user_id"], $product["product_id"], $_POST["qty"]);
+	if(isset($_GET["id"])){
+		$product_id = $_GET["id"];
+		$product = getProduct($product_id, $CONNECTION);
+		$shop = getShop($product["FK_SHOP_ID"], $CONNECTION);
+		$product_type = getProductType($product["FK_PRODUCT_TYPE_ID"], $CONNECTION);
+		$trader = getTrader($shop["FK_USER_ID"], $CONNECTION);
+	}
+
+	if(isset($_POST["pk_product_id"])){
+		if($_POST["qty"] > 0 )
+			// Should be replaced with client after login.
+			add_to_cart($trader["PK_USER_ID"], $_POST["pk_product_id"], $_POST["qty"], $product["MAX_ORDER"], $CONNECTION);
 	}
 	
-	function add_to_cart($user, $product, $qty)	{
+	function add_to_cart($user_id, $product_id, $qty, $max_quantity,$connection)	{
 		//add to cart
+
+		// Check if same product exists
+		$check_sql_string = 'SELECT COUNT(*) as COUNT FROM nepbuy_carts WHERE FK_USER_ID='.$user_id.' AND FK_PRODUCT_ID='.$product_id;
+		$chk_st_id = oci_parse($connection, $check_sql_string);
+		oci_execute($chk_st_id);
+		$count = oci_fetch_assoc($chk_st_id);
+
+		// Check if any rows exist
+		if($count['COUNT'] == 0) {
+			$sqlString = 'INSERT INTO nepbuy_carts(FK_USER_ID,FK_PRODUCT_ID,PRODUCT_QUANTITY) VALUES('.$user_id.','.$product_id.','.$qty.')';
+			$stid = oci_parse($connection, $sqlString);
+			$result = oci_execute($stid);
+			if($result)
+				echo "Added to cart";
+			else
+				echo "Failed to add to cart";
+		}
+		else {
+
+			// Check if the product quantity doesn't exceed the MAX_ORDER or MIN_ORDER limit.
+			$check_max_sql_string = 'SELECT PRODUCT_QUANTITY FROM nepbuy_carts WHERE FK_USER_ID='.$user_id.'AND FK_PRODUCT_ID='.$product_id;
+			$ch_max_st_id = oci_parse($connection, $check_max_sql_string);
+			oci_execute($ch_max_st_id);
+			$prod_quantity = oci_fetch_assoc($ch_max_st_id);
+			if($max_quantity != NULL && intval($prod_quantity['PRODUCT_QUANTITY']) + intval($qty) > intval($max_quantity))
+				$qty = intval($max_quantity) - intval($prod_quantity['PRODUCT_QUANTITY']);
+
+			$sqlString = 'UPDATE nepbuy_carts SET PRODUCT_QUANTITY = PRODUCT_QUANTITY + '.$qty.' WHERE FK_USER_ID='.$user_id.'AND FK_PRODUCT_ID='.$product_id;
+			$stid = oci_parse($connection, $sqlString);
+			$result = oci_execute($stid);
+			if($result)
+				echo "Updated to cart";
+			else
+				echo "Failed to update the cart";	
+		}
+	}
+
+	function getTrader($trader_id, $connection) {
+		$sqlString = 'SELECT * FROM nepbuy_users where PK_USER_ID='.$trader_id;
+		$stid = oci_parse($connection, $sqlString);
+		oci_execute($stid);
+
+		$trader = oci_fetch_assoc($stid);
+		return $trader;
+	}
+
+	function getProduct($product_id, $connection) {
+		$sqlString = 'SELECT * FROM nepbuy_products where PK_PRODUCT_ID='.$product_id;
+		$stid = oci_parse($connection, $sqlString);
+		oci_execute($stid);
+
+		$product = oci_fetch_assoc($stid);
+		return $product;
+	}
+
+	function getShop($shop_id, $connection){
+		$sqlString = 'SELECT * FROM nepbuy_shops where PK_SHOP_ID='.$shop_id;
+		$stid = oci_parse($connection, $sqlString);
+		oci_execute($stid);
+
+		$shop = oci_fetch_assoc($stid);
+		return $shop;
+	}
+	function getProductType($product_type_id, $connection){
+		$sqlString = 'SELECT * FROM nepbuy_product_types where PK_PRODUCT_TYPE_ID='.$product_type_id;
+		$stid = oci_parse($connection, $sqlString);
+		oci_execute($stid);
+
+		$product_type = oci_fetch_assoc($stid);
+		return $product_type;
 	}
 ?>
 
 <div>
-	<?php
-			echo $product["photo"];
-		?>
+	<div>
 		Product Name:
 		<?php
-			echo $product["name"];
+			echo $product["NAME"];
 		?>
+	</div>
+	<div>
 		Product Description:
 		<?php
-			echo $product["description"];
+			echo $product["DESCRIPTION"];
 		?>
+	</div>
+	<div>
 		Product Stock Available:
 		<?php
-			echo $product["stock_available"];
+			echo $product["STOCK_AVAILABLE"];
 		?>
+	</div>
+	<div>
 		Product Min Order:
 		<?php
-			if ($product["min_order"!=NULL])
-				echo $product["min_order"];
+			if ($product["MIN_ORDER"]!=NULL)
+				echo $product["MIN_ORDER"];
 			else 
 				echo "No min order.";
 		?>
+	</div>
+	<div>
 		Product Max Order:
 		<?php
-			if ($product["max_order"]!=NULL)
-				echo $product["max_order"];
+			if ($product["MAX_ORDER"]!=NULL)
+				echo $product["MAX_ORDER"];
 			else 
 				echo "No max order.";
 		?>
+	</div>
+	<div>
 		Product Allergy Information:
 		<?php
-			echo $product["allergy_info"];
+			echo $product["ALLERGY_INFO"];
 		?>
+	</div>
+	<div>
 		Product from Shop:
 		<?php
-			echo $shop["name"];
+			echo $shop["NAME"];
 		?>
+	</div>
+	<div>
 		Product Type:
 		<?php
-			echo $product_type["name"];
+			echo $product_type["NAME"];
 		?>
+	</div>
+	<div>
 		Product Price:
 		<?php
-			echo $product["price"];
+			echo $product["PRICE"];
 		?>
+	</div>
+	<div>
+		Product Trader:
 		<?php
-			if ($product["stock_available"])
+			echo $trader["NAME"];
+		?>
+	</div>
+	<div>
+		<?php
+			if ($product["STOCK_AVAILABLE"])
 			{
 				?>
-				<form action="post">
-					<input name="pk_product_id" type="hidden" value="<?php echo $product["pk_product_id"]; ?>"/>
-					<input name= "qty" type="number" value="0" min="<?php echo $product["min_order"];?>" max="<?php echo $product["max_order"];?>"/>
+				<form method ="post">
+					<input name="pk_product_id" type="hidden" value="<?php echo $product["PK_PRODUCT_ID"]; ?>"/>
+					<input name= "qty" type="number" value="1" min="<?php echo $product["MIN_ORDER"];?>" max="<?php echo $product["MAX_ORDER"];?>"/>
 					<input type="submit" value="Add to Cart"/>
 				</form>
 				<?php
@@ -74,5 +174,6 @@
 				echo "No stock available. Choose other product.";
 			}	
 		?>
+	</div>
 		//update quantity if exist
 </div>

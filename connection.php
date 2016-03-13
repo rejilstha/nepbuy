@@ -1,14 +1,6 @@
 <?php
 
-$connection = oci_connect ( "nepbuy", "nepbuy", "localhost:8080/nepbuy");
-if(!$connection) {
-	$m = oci_error();
-	echo $m['message'];
-	exit;
-}
-else {
-	print "Connected to Oracle!";
-}
+$CONNECTION = oci_connect ("nepbuy", "nepbuy", "Raymondo/XE") or die('Error');
+if($CONNECTION == "Error")
 
-oci_close($connection);
 ?>
