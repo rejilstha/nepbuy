@@ -2,20 +2,21 @@
 	include("connection.php");
 
 	// SHould be replaced by client.
-	$trader_id = 1;
-	$cart_products = get_cart_products($trader_id, $CONNECTION);
+	$user_id = $_SESSION["user_session"];
+	$cart_products = get_cart_products($user_id, $CONNECTION);
 
 	if(isset($_POST["submit"])){
 		if($_POST["submit"] == "update") {
-			update_qty($trader_id, $_POST["pk_product_id"], $_POST["qty"], $CONNECTION);
+			update_qty($user_id, $_POST["pk_product_id"], $_POST["qty"], $CONNECTION);
 		}
 		else if($_POST["submit"] == "remove") {
-			remove_product($trader_id, $_POST["pk_product_id"], $CONNECTION);
+			remove_product($user_id, $_POST["pk_product_id"], $CONNECTION);
 		}
+
 	}
 
 	function update_qty($user_id, $product_id, $qty, $connection) {
-		$sqlString = 'UPDATE nepbuy_carts SET PRODUCT_QUANTITY = '.$qty.' WHERE FK_USER_ID='.$user_id.' AND FK_PRODUCT_ID='.$product_id;
+		$sqlString = "UPDATE nepbuy_carts SET PRODUCT_QUANTITY = '.$qty.' WHERE USER_SESSION='".$user_id."' AND FK_PRODUCT_ID=".$product_id;
 		$stid = oci_parse($connection, $sqlString);
 		$result = oci_execute($stid);
 		if($result)
@@ -25,7 +26,7 @@
 	}
 
 	function remove_product($user_id, $product_id, $connection) {
-		$sqlString = 'DELETE FROM nepbuy_carts WHERE FK_USER_ID='.$user_id.' AND FK_PRODUCT_ID='.$product_id;
+		$sqlString = "DELETE FROM nepbuy_carts WHERE USER_SESSION='".$user_id."' AND FK_PRODUCT_ID=".$product_id;
 		$stid = oci_parse($connection, $sqlString);
 		$result = oci_execute($stid);
 		if($result)
@@ -35,7 +36,7 @@
 	}
 
 	function get_cart_products($user_id, $connection) {
-		$sqlString = 'SELECT * FROM nepbuy_carts where FK_USER_ID='.$user_id;
+		$sqlString = "SELECT * FROM nepbuy_carts where USER_SESSION='".$user_id."'";
 		$stid = oci_parse($connection, $sqlString);
 		oci_execute($stid);
 

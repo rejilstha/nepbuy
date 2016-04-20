@@ -12,22 +12,21 @@
 
 	if(isset($_POST["pk_product_id"])){
 		if($_POST["qty"] > 0 )
-			// Should be replaced with client after login.
-			add_to_cart($trader["PK_USER_ID"], $_POST["pk_product_id"], $_POST["qty"], $product["MAX_ORDER"], $CONNECTION);
+			add_to_cart($_SESSION["user_session"], $_POST["pk_product_id"], $_POST["qty"], $product["MAX_ORDER"], $CONNECTION);
 	}
 	
-	function add_to_cart($user_id, $product_id, $qty, $max_quantity,$connection)	{
+	function add_to_cart($user_session_id, $product_id, $qty, $max_quantity,$connection)	{
 		//add to cart
 
 		// Check if same product exists
-		$check_sql_string = 'SELECT COUNT(*) as COUNT FROM nepbuy_carts WHERE FK_USER_ID='.$user_id.' AND FK_PRODUCT_ID='.$product_id;
+		$check_sql_string = "SELECT COUNT(*) as COUNT FROM nepbuy_carts WHERE USER_SESSION='".$user_session_id."' AND FK_PRODUCT_ID=".$product_id;
 		$chk_st_id = oci_parse($connection, $check_sql_string);
 		oci_execute($chk_st_id);
 		$count = oci_fetch_assoc($chk_st_id);
 
 		// Check if any rows exist
 		if($count['COUNT'] == 0) {
-			$sqlString = 'INSERT INTO nepbuy_carts(FK_USER_ID,FK_PRODUCT_ID,PRODUCT_QUANTITY) VALUES('.$user_id.','.$product_id.','.$qty.')';
+			$sqlString = "INSERT INTO nepbuy_carts(USER_SESSION,FK_PRODUCT_ID,PRODUCT_QUANTITY) VALUES('".$user_session_id."',".$product_id.','.$qty.')';
 			$stid = oci_parse($connection, $sqlString);
 			$result = oci_execute($stid);
 			if($result)
@@ -37,15 +36,16 @@
 		}
 		else {
 
-			// Check if the product quantity doesn't exceed the MAX_ORDER or MIN_ORDER limit.
-			$check_max_sql_string = 'SELECT PRODUCT_QUANTITY FROM nepbuy_carts WHERE FK_USER_ID='.$user_id.'AND FK_PRODUCT_ID='.$product_id;
+			// Check if the product quantity doesn't exceed the MAX_ORDER limit.
+			$check_max_sql_string = "SELECT PRODUCT_QUANTITY FROM nepbuy_carts WHERE USER_SESSION='".$user_session_id."' AND FK_PRODUCT_ID=".$product_id;
 			$ch_max_st_id = oci_parse($connection, $check_max_sql_string);
 			oci_execute($ch_max_st_id);
 			$prod_quantity = oci_fetch_assoc($ch_max_st_id);
+			
 			if($max_quantity != NULL && intval($prod_quantity['PRODUCT_QUANTITY']) + intval($qty) > intval($max_quantity))
 				$qty = intval($max_quantity) - intval($prod_quantity['PRODUCT_QUANTITY']);
 
-			$sqlString = 'UPDATE nepbuy_carts SET PRODUCT_QUANTITY = PRODUCT_QUANTITY + '.$qty.' WHERE FK_USER_ID='.$user_id.'AND FK_PRODUCT_ID='.$product_id;
+			$sqlString = "UPDATE nepbuy_carts SET PRODUCT_QUANTITY = PRODUCT_QUANTITY + ".$qty." WHERE USER_SESSION='".$user_session_id."' AND FK_PRODUCT_ID=".$product_id;
 			$stid = oci_parse($connection, $sqlString);
 			$result = oci_execute($stid);
 			if($result)
@@ -131,7 +131,10 @@
 	<div>
 		Product Allergy Information:
 		<?php
-			echo $product["ALLERGY_INFO"];
+			if($product["ALLERGY_INFO"] != NULL)
+				echo $product["ALLERGY_INFO"];
+			else
+				echo "No allergy info."
 		?>
 	</div>
 	<div>
@@ -160,7 +163,7 @@
 	</div>
 	<div>
 		<?php
-			if ($product["STOCK_AVAILABLE"])
+			if ($product["STOCK_AVAILABLE"] > 0)
 			{
 				?>
 				<form method ="post">

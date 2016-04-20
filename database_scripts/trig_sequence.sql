@@ -59,7 +59,7 @@ create or replace trigger trig_payment_info
 before insert on nepbuy_payment_info
 for each row 
 begin 
-:new.pk_payment__id:= seq_payment_info.nextval;
+:new.pk_payment_id:= seq_payment_info.nextval;
 end;
 /
 
