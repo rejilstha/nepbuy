@@ -74,7 +74,7 @@
 							<h2 class="title">Rejil Shrestha</h2>
 							<p class="text">They bring mad skills, tons of passion, and expertise in a delicious array of cuisines.</p>
 							<br>
-							<a class="edit-profile"><i class="fa fa-edit"></i>Edit Profile</a>
+							<a class="edit-profile" href="profile.php"><i class="fa fa-edit"></i>Edit Profile</a>
 					</div>
 				</div>
 				

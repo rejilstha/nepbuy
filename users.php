@@ -1,6 +1,7 @@
 <?php
 	include("connection.php");
 
+	// Submitted from the add user.
 	if(isset($_POST["create-user-submit"])) {
 		add_user($_POST["username"],$_POST["email"], $_POST["role"], $CONNECTION);
 	}
@@ -25,20 +26,31 @@
 		$sqlString = "INSERT INTO nepbuy_user_roles(FK_USER_ID,FK_ROLE_ID) VALUES(".$added_user_id["PK_USER_ID"].','.$role.")";
 		$stid = oci_parse($connection, $sqlString);
 		oci_execute($stid);
-	
+	}
 
-
-}
 
 	$sqlusr = "SELECT * FROM nepbuy_users ORDER BY PK_USER_ID";
-		$stid1 = oci_parse($CONNECTION, $sqlusr);
-		if(oci_execute($stid1)>0){
-		while($row = oci_fetch_assoc($stid1)){
-		//echo $sqlusr;exit;
-		echo $row['NAME'];
-		echo $row['CONTACT'];
-		echo $row['EMAIL'];
-
-				}
+	$stid1 = oci_parse($CONNECTION, $sqlusr);
+	if(oci_execute($stid1) > 0) {
+		?>
+		<table>
+			<tr>
+				<th>Name</th>
+				<th>Contact</th>
+				<th>Email</th>
+			</tr>
+			<?php
+			while($row = oci_fetch_assoc($stid1)) {
+			?>
+				<tr>
+					<td><?php echo $row['NAME']; ?></td>
+					<td><?php echo $row['CONTACT']; ?></td>
+					<td><?php echo $row['EMAIL']; ?></td>
+				</tr>
+			<?php
 			}
+			?>
+		</table>
+	<?php
+	}
 ?>

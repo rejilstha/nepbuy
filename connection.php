@@ -6,7 +6,7 @@ if (!isset($_SESSION["user_session"])) {
 	echo "here";
 }
 
-$CONNECTION = oci_connect ("nepbuy", "nepbuy", "DESKTOP-TAV586T/XE") or die('Error');
+$CONNECTION = oci_connect ("nepbuy", "nepbuy", "localhost/XE") or die('Error');
 if($CONNECTION == "Error")
 
 ?>
