@@ -46,11 +46,11 @@
 	<?php
 	}
 	else {
-		header("Location: show_cart.php");
+		header("Location: cart.php");
 	}
 
 	function get_cart_products($user_id, $connection) {
-		$sqlString = 'SELECT * FROM nepbuy_carts where FK_USER_ID='.$user_id;
+		$sqlString = "SELECT * FROM nepbuy_carts where USER_SESSION='".$user_id."'";
 		$stid = oci_parse($connection, $sqlString);
 		oci_execute($stid);
 

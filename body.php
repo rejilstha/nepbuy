@@ -1,5 +1,6 @@
 <?php
 	include("connection.php");
+	include("includes/header.php");
 
 	if(isset($_POST["signup"])){
 		saveuser($_POST["username"], $_POST["emailAddress"], $_POST["password"], $_POST["contact"], $CONNECTION);
@@ -52,6 +53,10 @@
 			echo "Updated cart";
 	}
 ?>
-<div>
-	This is body.
-</div>
+<section  id="hero-page1">
+	<div>
+		This is body.
+	</div>
+</section>
+
+<?php include("includes/footer.php"); ?>

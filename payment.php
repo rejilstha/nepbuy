@@ -18,7 +18,7 @@
 		echo "Payment Successful!!";
 	}
 	else {
-		header("Location: show_cart.php");
+		header("Location: cart.php");
 	}
 
 	function getCollectionDaySlot($collection_day, $collection_slot, $connection) {

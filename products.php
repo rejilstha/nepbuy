@@ -1,5 +1,6 @@
 <?php
 	include("connection.php");
+	include('includes/header.php');
 
 	//detail information of product
 	if(isset($_GET["id"])){
@@ -91,92 +92,98 @@
 	}
 ?>
 
-<div>
-	<div>
-		Product Name:
-		<?php
-			echo $product["NAME"];
-		?>
-	</div>
-	<div>
-		Product Description:
-		<?php
-			echo $product["DESCRIPTION"];
-		?>
-	</div>
-	<div>
-		Product Stock Available:
-		<?php
-			echo $product["STOCK_AVAILABLE"];
-		?>
-	</div>
-	<div>
-		Product Min Order:
-		<?php
-			if ($product["MIN_ORDER"]!=NULL)
-				echo $product["MIN_ORDER"];
-			else 
-				echo "No min order.";
-		?>
-	</div>
-	<div>
-		Product Max Order:
-		<?php
-			if ($product["MAX_ORDER"]!=NULL)
-				echo $product["MAX_ORDER"];
-			else 
-				echo "No max order.";
-		?>
-	</div>
-	<div>
-		Product Allergy Information:
-		<?php
-			if($product["ALLERGY_INFO"] != NULL)
-				echo $product["ALLERGY_INFO"];
-			else
-				echo "No allergy info."
-		?>
-	</div>
-	<div>
-		Product from Shop:
-		<?php
-			echo $shop["NAME"];
-		?>
-	</div>
-	<div>
-		Product Type:
-		<?php
-			echo $product_type["NAME"];
-		?>
-	</div>
-	<div>
-		Product Price:
-		<?php
-			echo $product["PRICE"];
-		?>
-	</div>
-	<div>
-		Product Trader:
-		<?php
-			echo $trader["NAME"];
-		?>
-	</div>
-	<div>
-		<?php
-			if ($product["STOCK_AVAILABLE"] > 0)
-			{
-				?>
-				<form method ="post">
-					<input name="pk_product_id" type="hidden" value="<?php echo $product["PK_PRODUCT_ID"]; ?>"/>
-					<input name= "qty" type="number" value="1" min="<?php echo $product["MIN_ORDER"];?>" max="<?php echo $product["MAX_ORDER"];?>"/>
-					<input type="submit" value="Add to Cart"/>
-				</form>
+<section>
+	<div class="row">
+		<div class="container">
+			<div>
+				Product Name:
 				<?php
-			}
-			else {
-				echo "No stock available. Choose other product.";
-			}	
-		?>
+					echo $product["NAME"];
+				?>
+			</div>
+			<div>
+				Product Description:
+				<?php
+					echo $product["DESCRIPTION"];
+				?>
+			</div>
+			<div>
+				Product Stock Available:
+				<?php
+					echo $product["STOCK_AVAILABLE"];
+				?>
+			</div>
+			<div>
+				Product Min Order:
+				<?php
+					if ($product["MIN_ORDER"]!=NULL)
+						echo $product["MIN_ORDER"];
+					else 
+						echo "No min order.";
+				?>
+			</div>
+			<div>
+				Product Max Order:
+				<?php
+					if ($product["MAX_ORDER"]!=NULL)
+						echo $product["MAX_ORDER"];
+					else 
+						echo "No max order.";
+				?>
+			</div>
+			<div>
+				Product Allergy Information:
+				<?php
+					if($product["ALLERGY_INFO"] != NULL)
+						echo $product["ALLERGY_INFO"];
+					else
+						echo "No allergy info."
+				?>
+			</div>
+			<div>
+				Product from Shop:
+				<?php
+					echo $shop["NAME"];
+				?>
+			</div>
+			<div>
+				Product Type:
+				<?php
+					echo $product_type["NAME"];
+				?>
+			</div>
+			<div>
+				Product Price:
+				<?php
+					echo $product["PRICE"];
+				?>
+			</div>
+			<div>
+				Product Trader:
+				<?php
+					echo $trader["NAME"];
+				?>
+			</div>
+			<div>
+				<?php
+					if ($product["STOCK_AVAILABLE"] > 0)
+					{
+						?>
+						<form method ="post">
+							<input name="pk_product_id" type="hidden" value="<?php echo $product["PK_PRODUCT_ID"]; ?>"/>
+							<input name= "qty" type="number" value="1" min="<?php echo $product["MIN_ORDER"];?>" max="<?php echo $product["MAX_ORDER"];?>"/>
+							<input type="submit" value="Add to Cart"/>
+						</form>
+						<?php
+					}
+					else {
+						echo "No stock available. Choose other product.";
+					}	
+				?>
+			</div>
+				//update quantity if exist
+		</div>
 	</div>
-		//update quantity if exist
-</div>
+</section>
+
+<?php include('includes/footer.php'); ?>
