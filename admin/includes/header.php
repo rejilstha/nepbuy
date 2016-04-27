@@ -39,11 +39,11 @@
       <ul class="nav navbar-nav" style="font-size:10px !important">
       <li ><a href="index.php">Home</a></li>
       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Trader
         <span class="caret"></span></a>
         <ul class="dropdown-menu">
-          <li><a href="add_admin.php"  style="color:#000 !important;">Add Admin</a></li>
-          <li><a href="view_admin.php"  style="color:#000 !important;">View Admin</a></li>
+          <li><a href="add_admin.php"  style="color:#000 !important;">Add Trader</a></li>
+          <li><a href="view_admin.php"  style="color:#000 !important;">View Trader</a></li>
           
         </ul>
       </li>
