@@ -17,14 +17,13 @@
 
 		$min_order = ($min_order == '' ? "NULL" : $min_order);
 		$max_order = ($max_order == '' ? "NULL" : $max_order);
-		$photo = 'NULL';
 
 		$sqlString = "INSERT INTO nepbuy_products(NAME,DESCRIPTION,PRICE,QUANTITY_PER_ITEM,".
 					"STOCK_AVAILABLE,MIN_ORDER,MAX_ORDER,ALLERGY_INFO,FK_SHOP_ID,".
-					"FK_PRODUCT_TYPE_ID,PHOTO) VALUES('".
+					"FK_PRODUCT_TYPE_ID,PHOTO_LOCATION) VALUES('".
 					$product_name."','".$description."',".$price.",".$qty_per_item.",".
 					$stock_available.",".$min_order.",".$max_order.",'".
-					$allergy_info."',".$fk_shop_id.",".$product_type.",".$photo.")";
+					$allergy_info."',".$fk_shop_id.",".$product_type.",'".$photo."')";
 		$stid = oci_parse($connection, $sqlString);
 		oci_execute($stid);
 	}

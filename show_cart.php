@@ -64,7 +64,7 @@
 	<div>
 		<div>
 			<?php
-				echo $product["PHOTO"];
+				echo $product["PHOTO_LOCATION"];
 			?>
 		</div>
 		<div>

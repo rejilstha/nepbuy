@@ -76,7 +76,7 @@ include("connection.php");
 ?>	
 	<div>
 		<?php
-			echo $product["PHOTO"];
+			echo $product["PHOTO_LOCATION"];
 		?>
 		Product Name:
 		<?php

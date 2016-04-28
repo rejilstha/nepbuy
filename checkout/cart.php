@@ -1,6 +1,6 @@
 <?php
-	include("connection.php");
-	include('includes/header.php');
+	require __DIR__ ."/../connection.php";
+	// include('includes/header.php');
 
 	// SHould be replaced by client.
 	$user_id = $_SESSION["user_session"];
@@ -116,7 +116,16 @@
 			 						<td><?php echo $product["NAME"]; ?></td>
 			 						<td>Butcher</td>
 									<input name="pk_product_id" type="hidden" value="<?php echo $product["PK_PRODUCT_ID"]; ?>"/>
-									<td><input name= "qty" type="number" value="<?php echo $cart_product["PRODUCT_QUANTITY"];?>" min="<?php echo $product["MIN_ORDER"];?>" max="<?php echo $product["MAX_ORDER"];?>"/></td>
+									<td><input name= "qty" type="number" value="<?php echo $cart_product["PRODUCT_QUANTITY"];?>" min="<?php echo $product["MIN_ORDER"];?>" 
+									max="<?php 
+										if (isset($product['MAX_ORDER']) && $product['MAX_ORDER'] > $product['STOCK_AVAILABLE']) 
+											echo $product['STOCK_AVAILABLE'];
+										elseif (!isset($product['MAX_ORDER'])) {
+											echo $product['STOCK_AVAILABLE'];
+										} else {
+											echo $product['MAX_ORDER']; 
+										}
+										?>"/></td>
 									<td><?php echo $product["PRICE"]; ?></td>
 									<td>
 										<?php 
@@ -188,7 +197,9 @@
 			</div>            
 		</section>		
 		<!-- hero page  -->
-<?php include('includes/footer.php'); ?>
+<?php 
+// include('includes/footer.php'); 
+?>
 <?php
 	$total = 0;
 	foreach ($cart_products as $cart_product) {
