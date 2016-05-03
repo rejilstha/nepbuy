@@ -1,6 +1,6 @@
 <?php
 	require __DIR__ .'/../connection.php';
-	// include('includes/header.php');
+	include('../includes/header.php');
 
 	//detail information of product
 	if(isset($_GET["id"])){
@@ -214,4 +214,4 @@
 	</div>
 </section>
 
-<?php //include('includes/footer.php'); ?>
+<?php include('../includes/footer.php'); ?>

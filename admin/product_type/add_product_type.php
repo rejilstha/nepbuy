@@ -32,25 +32,10 @@
 ?>
 
 <div>
-	<form method="post" action="products.php">
-		<input name="product-name" type="text" value="" placeholder="Product name" required>
-		<input name="description" type="text" value="" placeholder="Description">
-		<input name="price" type="number" value="" placeholder="Price" required>
-		<input name="qty-per-item" type="number" value="" placeholder="Quantity per item" required>
-		<input name="stock-available" type="number" value="" placeholder="Stock available" required>
-		<input name="min-order" type="number" value="" placeholder="Min order">
-		<input name="max-order" type="number" value="" placeholder="Max order">
-		<input name="allergy-info" type="text" value="" placeholder="Allergy info">
-		<select name="fk-shop-id" required>
-			<?php
-			foreach ($shops as $shop) {
-			?>
-				<option value="<?php echo $shop["PK_SHOP_ID"]; ?>"><?php echo $shop["NAME"]; ?></option>
-			<?php 
-			} 
-			?>
-		</select>
-		<select name="product-type" required>
+	<form method="post" action="product_types.php">
+		<input name="product-type-name" type="text" value="" placeholder="Product type name" required>
+		<select name="fk-parent-id">
+			<option value="">None</option>
 			<?php
 			foreach ($product_types as $product_type) {
 			?>
@@ -59,7 +44,7 @@
 			} 
 			?>
 		</select>
-		<input type="submit" name="create-product-submit" value="Create product">
+		<input type="submit" name="create-product-type-submit" value="Create product type">
 	</form>
 </div>
 

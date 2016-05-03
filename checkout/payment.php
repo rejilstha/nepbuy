@@ -36,22 +36,6 @@
 		$payer = new \PayPal\Api\Payer();
 		$payer->setPaymentMethod("paypal");
 
-		foreach ($variable as $key => $value) {
-			# code...
-		}
-		$item1 = new \PayPal\Api\Item();
-		$item1->setName('Ground Coffee 40 oz')
-		    ->setCurrency('USD')
-		    ->setQuantity(1)
-		    ->setSku("123123") // Similar to `item_number` in Classic API
-		    ->setPrice(17.5);
-		$item2 = new \PayPal\Api\Item();
-		$item2->setName('Granola bars')
-		    ->setCurrency('USD')
-		    ->setQuantity(5)
-		    ->setSku("321321") // Similar to `item_number` in Classic API
-		    ->setPrice(2);
-
 		$itemList = new \PayPal\Api\ItemList();
 
 		$products = get_cart_products($user_id, $CONNECTION);
@@ -159,7 +143,8 @@
 	}
 
 	function get_cart_products($user_id, $connection) {
-		$sqlString = "SELECT * FROM nepbuy_carts where USER_SESSION=$user_id";
+		echo $user_id;
+		$sqlString = "SELECT * FROM nepbuy_carts where USER_SESSION='$user_id'";
 		$stid = oci_parse($connection, $sqlString);
 		oci_execute($stid);
 

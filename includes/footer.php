@@ -58,12 +58,12 @@
 
 
 
-		<script src="js/jquery.js"></script>
-		<script src="js/bootstrap.min.js"></script>
-        <script src="js/bootstrap-submenu.min.js" defer></script>
+		<script src="/nepbuy/js/jquery.js"></script>
+		<script src="/nepbuy/js/bootstrap.min.js"></script>
+        <script src="/nepbuy/js/bootstrap-submenu.js" defer></script>
 		
-	<script type="text/javascript" src="slide/engine1/wowslider.js"></script>
-	<script type="text/javascript" src="slide/engine1/script.js"></script>
+	<script type="text/javascript" src="/nepbuy/engine1/wowslider.js"></script>
+	<script type="text/javascript" src="/nepbuy/engine1/script.js"></script>
    
 	
 

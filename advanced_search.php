@@ -1,5 +1,6 @@
 <?php
 	include("connection.php");
+	include("includes/header.php");
 
 	$results = array();
 
@@ -38,6 +39,26 @@
 	}
 ?>
 
+<section id="hero-page1">
+	<div class="row">
+	 <div class="container">
+		<div class="col-sm-12">
+
+		<div class="col-sm-4">
+			<img src="/nepbuy/images/img/veg.png" width="100%" >
+		</div>
+		<div class="col-sm-8">
+			<h2 class="title">NepBuy Introduction</h2>
+			<p class="text">Munchery chefs come from top restaurants. They bring mad skills, tons of passion, and expertise in a delicious array of cuisines. They insist, as we do, on using only the freshest ingredients to make our tasty, nourishing food.</p>
+		</div>	
+		</div>
+
+		
+	</div>
+		
+	</div>            
+</section>		
+
 <form method="get">
 	<input type="text" value="" name="q"/>
 	<select name="category">
@@ -64,3 +85,5 @@
 	}
 	?>
 </div>
+
+<?php include("includes/footer.php"); ?>

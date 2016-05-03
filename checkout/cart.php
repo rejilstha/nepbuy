@@ -1,6 +1,6 @@
 <?php
 	require __DIR__ ."/../connection.php";
-	// include('includes/header.php');
+	include('../includes/header.php');
 
 	// SHould be replaced by client.
 	$user_id = $_SESSION["user_session"];
@@ -68,13 +68,13 @@
 			 <div class="container">
 				<div class="col-sm-12">
 					<div class="col-sm-3">
-						  <img src="images/1.jpg" class="img-circle" alt="Cinque Terre" width="200px" height="200px"> 
+						  <img src="/nepbuy/images/1.jpg" class="img-circle" alt="Cinque Terre" width="200px" height="200px"> 
 					</div>
 					<div class="col-sm-9">
 							<h2 class="title">Rejil Shrestha</h2>
 							<p class="text">They bring mad skills, tons of passion, and expertise in a delicious array of cuisines.</p>
 							<br>
-							<a class="edit-profile" href="profile.php"><i class="fa fa-edit"></i>Edit Profile</a>
+							<a class="edit-profile" href="/nepbuy/account/profile.php"><i class="fa fa-edit"></i>Edit Profile</a>
 					</div>
 				</div>
 				
@@ -163,7 +163,7 @@
 			 			</tbody>
 			 		</table>
 
-		 			<form method="post" action="choose_delivery.php">
+		 			<form method="post" action="delivery.php">
 
 			 		    <a href="" class="cart-btn-main">Continues Shopping</a>
 						<input class="cart-btn-main1"  name="submit"type="submit" value="checkout"/>
@@ -190,7 +190,7 @@
 					<p class="text">Munchery chefs come from top restaurants. They bring mad skills, tons of passion, and expertise in a delicious array of cuisines. They insist, as we do, on using only the freshest ingredients to make our tasty, nourishing food.</p>
 				</div>
 				<div class="col-sm-4">
-					<img src="images/img/hero1.png" >
+					<img src="/nepbuy/images/img/hero1.png" >
 				</div>
 			</div>
 				
