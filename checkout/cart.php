@@ -1,5 +1,10 @@
 <?php
 require __DIR__ ."/../connection.php";
+if (!preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"])) {
+	if(is_trader($_SESSION["user_session"], $CONNECTION)) {
+		return;
+	}
+}
 include('../includes/header.php');
 
 $user_id = $_SESSION["user_session"];
@@ -14,6 +19,21 @@ if(isset($_POST["submit"])){
 }
 
 $cart_products = get_cart_products($user_id, $CONNECTION);
+
+function is_trader($user_id, $connection) {
+	$sqlString = "SELECT COUNT(*) AS COUNT FROM nepbuy_user_roles ur ".
+				"JOIN nepbuy_roles r ON r.PK_ROLE_ID=ur.FK_ROLE_ID ".
+				"WHERE (r.NAME='Trader') AND ur.FK_USER_ID=$user_id";
+
+	$stid = oci_parse($connection, $sqlString);
+	if(oci_execute($stid) > 0) {
+		if(oci_fetch_assoc($stid)["COUNT"] > 0) {
+			return true;
+		}
+	}
+
+	return false;
+}
 
 function update_qty($user_id, $product_id, $qty, $connection) {
 	if($qty < 0)
@@ -90,7 +110,7 @@ function get_product($product_id, $connection) {
 			<div class="col-sm-12">
 				<table class="cart">
 					<div class="cart-item">
-						<h2><i class="fa fa-shopping-cart"></i> 3 items</h2>
+						<h2><i class="fa fa-shopping-cart"></i><?php echo " ".count($cart_products)." items"; ?></h2>
 					</div>
 
 					<thead>
@@ -161,8 +181,14 @@ function get_product($product_id, $connection) {
 					</tbody>
 				</table>
 
-				<a href="index.php" class="btn btn-default">Continue Shopping</a>
-				<a href="delivery.php" class="cart-btn-main">Checkout</a>
+				<a href="/nepbuy/index.php" class="btn btn-default">Continue Shopping</a>
+				<?php 
+					if(count($cart_products) > 0) {
+					?>
+						<a href="delivery.php" class="cart-btn-main">Checkout</a>
+					<?php
+					}
+				?>
 
 			</div>
 
@@ -250,7 +276,7 @@ foreach ($cart_products as $cart_product) {
 	<?php
 	echo $total;
 	?>
-	<form method="post" action="choose_delivery.php">
+	<form method="post" action="delivery.php">
 		<input name="submit" type="submit" value="checkout"/>
 	</form>
 </div>

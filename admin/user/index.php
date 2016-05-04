@@ -1,7 +1,9 @@
 <?php
 require __DIR__ . '/../../connection.php';
 require __DIR__ ."/../includes/header.php";
-require __DIR__ ."/../admin_access.php";
+if(!(require __DIR__ . '/../admin_access.php')) {
+	return;
+}
 
 $type = isset($_GET["type"]) ? $_GET["type"] : "Customer";
 
@@ -23,8 +25,9 @@ function add_user($name, $email, $username, $role, $contact, $image, $upload_loc
 		$stid = oci_parse($connection, $sqlString);
 		oci_execute($stid);
 	} else {
+		$location = "../../uploads/users/". basename($image["name"]);
 		$image_location = $upload_location . basename($image["name"]);
-		move_uploaded_file($image["tmp_name"], $image_location);
+		move_uploaded_file($image["tmp_name"], $location);
 		
 		// Add the user to the users table.
 		$sqlString = "INSERT INTO nepbuy_users(NAME,CONTACT,EMAIL,PASSWORD,PHOTO_LOCATION) VALUES('$name',$contact,'$email','$username',$random_password','$image_location')";

@@ -5,10 +5,12 @@
 	} else {
 		$user = $_SESSION["user_session"];
 
-		if(!is_admin($user, $CONNECTION)) {
-			return; //403 Unauthorized;
+		if(is_admin($user, $CONNECTION)) {
+			return true; //403 Unauthorized;
 		}
 	}
+
+	return false;
 
 	function is_admin($user, $connection) {
 		$sqlString = "SELECT COUNT(*) AS COUNT FROM nepbuy_users u ".

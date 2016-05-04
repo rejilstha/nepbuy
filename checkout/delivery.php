@@ -1,11 +1,9 @@
 <?php
 	require __DIR__ ."/../connection.php";
-	include('../includes/header.php');
-
-	if (preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"])) {
-	  // User session is a guid and user isn't registered
-		header("Location: login.php?status=1");
+	if(!(require __DIR__ . "/../user_access.php")) {
+		return;
 	}
+	include('../includes/header.php');
 
 	$days = getDeliveryDays($CONNECTION);
 	$slots = getDeliverySlots($CONNECTION);

@@ -1,11 +1,16 @@
 <?php
 require __DIR__ ."/../connection.php";
+if(!(require __DIR__ . '/../trader_access.php')) {
+	return;
+}
 require __DIR__ ."/../includes/header.php";
 
-	// Submitted from the add shop.
+$trader = $_SESSION["user_session"];
+
+// Submitted from the add shop.
 if(isset($_POST["create-shop-submit"])) {
 	add_shop(
-		$_POST["name"], $_POST["location"], $_POST["trader"], $MAX_SHOPS_ALLOWED, $CONNECTION);
+		$_POST["name"], $_POST["location"], $trader, $MAX_SHOPS_ALLOWED, $CONNECTION);
 }
 
 function add_shop(
@@ -21,22 +26,13 @@ function add_shop(
 		}
 	}
 
-	$sqlString = "INSERT INTO nepbuy_shops(NAME,LOCATION,FK_USER_ID) VALUES('".
-	$shop_name."','".$location."',".$trader.")";
+	$sqlString = "INSERT INTO nepbuy_shops(NAME,LOCATION,FK_USER_ID,STATUS) VALUES('
+	$shop_name','$location',$trader,'Pending')";
 	$stid = oci_parse($connection, $sqlString);
 	oci_execute($stid);
 }
 
-function get_shop_trader($trader, $connection) {
-	$sqlString = "SELECT * FROM nepbuy_users WHERE PK_USER_ID=".$trader;
-	$stid = oci_parse($connection, $sqlString);
-	oci_execute($stid);
-
-	return oci_fetch_assoc($stid);
-}
-
-
-$sqlString = "SELECT * FROM nepbuy_shops ORDER BY PK_SHOP_ID";
+$sqlString = "SELECT * FROM nepbuy_shops WHERE FK_USER_ID=$trader ORDER BY PK_SHOP_ID";
 $stid = oci_parse($CONNECTION, $sqlString);
 if(oci_execute($stid) > 0) {
 	?>
@@ -65,16 +61,17 @@ if(oci_execute($stid) > 0) {
 				<tr>
 					<th>Name</th>
 					<th>Location</th>
-					<th>Shop Owner</th>
+					<th>Status</th>
+					<th></th>
 				</tr>
 				<?php
 				while($row = oci_fetch_assoc($stid)) {
-					$trader = get_shop_trader($row['FK_USER_ID'], $CONNECTION);
 					?>
 					<tr>
 						<td><?php echo $row['NAME']; ?></td>
 						<td><?php echo $row['LOCATION']; ?></td>
-						<td><?php echo $trader['NAME']; ?></td>
+						<td><?php echo $row['STATUS']; ?></td>
+						<td><a class="btn btn-default" href="edit.php?id=<?php echo $row["PK_SHOP_ID"]; ?>">Edit</a></td>
 					</tr>
 					<?php
 				}

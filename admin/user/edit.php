@@ -1,7 +1,9 @@
 <?php
 require __DIR__ . '/../../connection.php';
 require __DIR__ ."/../includes/header.php";
-require __DIR__ ."/../admin_access.php";
+if(!(require __DIR__ . '/../admin_access.php')) {
+	return;
+}
 require __DIR__ . '/../../includes/constants.php';
 
 if(!isset($_GET["id"]))
@@ -75,8 +77,9 @@ function edit_user($id, $name, $email, $username, $role, $contact, $image, $uplo
 
 	}
 	else {
+		$location = "../../uploads/users/". basename($image["name"]);
 		$image_location = $upload_location . basename($image["name"]);
-		move_uploaded_file($image["tmp_name"], $image_location);
+		move_uploaded_file($image["tmp_name"], $location);
 
 		$sqlString = "UPDATE nepbuy_users SET ".
 		"NAME='$name',EMAIL='$email',USERNAME='$username',CONTACT=$contact,PHOTO_LOCATION='$image_location' ".

@@ -13,6 +13,21 @@ function get_product_types($connection) {
   }
   return $product_types;
 }
+
+function is_trader_($user_id, $connection) {
+    $sqlString = "SELECT COUNT(*) AS COUNT FROM nepbuy_user_roles ur ".
+          "JOIN nepbuy_roles r ON r.PK_ROLE_ID=ur.FK_ROLE_ID ".
+          "WHERE (r.NAME='Trader' OR r.NAME='Admin') AND ur.FK_USER_ID=$user_id";
+
+    $stid = oci_parse($connection, $sqlString);
+    if(oci_execute($stid) > 0) {
+      if(oci_fetch_assoc($stid)["COUNT"] > 0) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 ?>
 
 <!DOCTYPE html>
@@ -156,7 +171,14 @@ function get_product_types($connection) {
             </li>
           </ul>
         </li>
-        <li class="scroll"><a href="/nepbuy/checkout/cart.php">Cart</a></li>
+        <?php
+          if (preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"]) || !is_trader_($_SESSION["user_session"], $CONNECTION)) {
+            ?>
+              <li class="scroll"><a href="/nepbuy/checkout/cart.php">Cart</a></li>
+            <?php
+            }
+        ?>
+        
         <?php
           if(preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"])) {
             ?>

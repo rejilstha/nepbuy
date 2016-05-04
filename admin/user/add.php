@@ -1,7 +1,9 @@
 <?php
 require __DIR__ . '/../../connection.php';
 require __DIR__ ."/../includes/header.php";
-require __DIR__ ."/../admin_access.php";
+if(!(require __DIR__ . '/../admin_access.php')) {
+	return;
+}
 
 $type = isset($_GET["type"]) ? $_GET["type"] : "Customer";
 

@@ -1,16 +1,10 @@
 <?php
 	require __DIR__  . '/../PayPal-PHP-SDK/autoload.php';
 	require __DIR__."/../connection.php";
+	if(!(require __DIR__ . "/../user_access.php")) {
+		return;
+	}
 	require __DIR__."/../includes/constants.php";
-
-	$user_id = $_SESSION["user_session"];
-	if(!isset($user_id)) {
-		header("Location: /nepbuy/login.php?status=1");
-	}
-	elseif (preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"])) {
-	  // User session is a guid and user isn't registered
-		header("Location: /nepbuy/login.php?status=1");
-	}
 
 	$apiContext = new \PayPal\Rest\ApiContext(
     	new \PayPal\Auth\OAuthTokenCredential(

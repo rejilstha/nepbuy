@@ -106,87 +106,60 @@
 		$product_type = oci_fetch_assoc($stid);
 		return $product_type;
 	}
-?>
 
-<section>
+	function is_trader($user_id, $connection) {
+		$sqlString = "SELECT COUNT(*) AS COUNT FROM nepbuy_user_roles ur ".
+					"JOIN nepbuy_roles r ON r.PK_ROLE_ID=ur.FK_ROLE_ID ".
+					"WHERE (r.NAME='Trader') AND ur.FK_USER_ID=$user_id";
+
+		$stid = oci_parse($connection, $sqlString);
+		if(oci_execute($stid) > 0) {
+			if(oci_fetch_assoc($stid)["COUNT"] > 0) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+?>
+<!-- hero page -->
+<section id="hero-page1">
 	<div class="row">
-		<div class="container">
-			<div>
-				<img src="<?php echo $product["PHOTO_LOCATION"]; ?>">
+	 <div class="container">
+		<div class="col-sm-12">
+			<h2 class="title">Product Info</h2>
+			<p class="text"><?php echo $product["DESCRIPTION"]; ?></p>
+		</div>
+		
+	</div>
+		
+	</div>            
+</section>	
+<!-- product special / latest -->
+		<section id="special-offer">		
+           <div class="row">
+			 <div class="container">
+				<div class="col-sm-6">	
+				<img src="<?php echo $product["PHOTO_LOCATION"]; ?>" height="300px">
 			</div>
-			<div>
-				Product Name:
-				<?php
-					echo $product["NAME"];
-				?>
-			</div>
-			<div>
-				Product Description:
-				<?php
-					echo $product["DESCRIPTION"];
-				?>
-			</div>
-			<div>
-				Product Stock Available:
-				<?php
-					echo $product["STOCK_AVAILABLE"];
-				?>
-			</div>
-			<div>
-				Product Min Order:
-				<?php
-					if ($product["MIN_ORDER"]!=NULL)
-						echo $product["MIN_ORDER"];
-					else 
-						echo "No min order.";
-				?>
-			</div>
-			<div>
-				Product Max Order:
-				<?php
-					if ($product["MAX_ORDER"]!=NULL)
-						echo $product["MAX_ORDER"];
-					else 
-						echo "No max order.";
-				?>
-			</div>
-			<div>
-				Product Allergy Information:
-				<?php
-					if($product["ALLERGY_INFO"] != NULL)
-						echo $product["ALLERGY_INFO"];
-					else
-						echo "No allergy info."
-				?>
-			</div>
-			<div>
-				Product from Shop:
-				<?php
-					echo $shop["NAME"];
-				?>
-			</div>
-			<div>
-				Product Type:
-				<?php
-					echo $product_type["NAME"];
-				?>
-			</div>
-			<div>
-				Product Price:
-				<?php
-					echo $product["PRICE"];
-				?>
-			</div>
-			<div>
-				Product Trader:
-				<?php
-					echo $trader["NAME"];
-				?>
-			</div>
-			<div>
+
+			<div class="col-sm-6 product-info">
+				<h2><?php echo $product["NAME"]." - $".$product["PRICE"]; ?></h2>
+				<p><?php echo $product["DESCRIPTION"]; ?></p>
+				<p><?php echo $product["ALLERGY_INFO"]; ?></p>
+				<p>Min order - <?php echo $product["MIN_ORDER"]; ?> & Max order - <?php echo $product["MAX_ORDER"]; ?></p>
+				<p><strong>Only <?php echo $product["STOCK_AVAILABLE"]; ?> left</strong></p>
+				<div>
 				<?php
 					if ($product["STOCK_AVAILABLE"] > 0)
 					{
+						if (!preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"])) {
+							
+							if(is_trader($_SESSION["user_session"], $CONNECTION)) {
+								// Trader shouldn't be allowed to checkout.
+								return; //Not allowed
+							}
+						}
 						?>
 						<form method ="post">
 							<input name="pk_product_id" type="hidden" value="<?php echo $product["PK_PRODUCT_ID"]; ?>"/>
@@ -200,7 +173,7 @@
 										echo $product['MAX_ORDER']; 
 									}
 									?>"/>
-							<input type="submit" value="Add to Cart"/>
+							<input class="cartadd" type="submit" value="Add to Cart"/>
 						</form>
 						<?php
 					}
@@ -209,7 +182,6 @@
 					}	
 				?>
 			</div>
-				//update quantity if exist
 		</div>
 	</div>
 </section>

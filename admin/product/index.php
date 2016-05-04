@@ -3,7 +3,9 @@
 
 require __DIR__ . '/../../connection.php';
 require __DIR__ ."/../includes/header.php";
-require __DIR__ ."/../admin_access.php";
+if(!(require __DIR__ . '/../admin_access.php')) {
+	return;
+}
 require __DIR__ . '/../../includes/constants.php';
 
 	// Submitted from the add product.
@@ -36,8 +38,10 @@ function add_product(
 		$stid = oci_parse($connection, $sqlString);
 		oci_execute($stid);
 	} else {
+		$location = "../../uploads/products/". basename($image["name"]);
+
 		$product_location = $upload_location . basename($product_image["name"]);
-		move_uploaded_file($product_image["tmp_name"], $product_location);
+		move_uploaded_file($product_image["tmp_name"], $location);
 
 		$sqlString = "INSERT INTO nepbuy_products(NAME,DESCRIPTION,PRICE,QUANTITY_PER_ITEM,".
 		"STOCK_AVAILABLE,MIN_ORDER,MAX_ORDER,ALLERGY_INFO,FK_SHOP_ID,".

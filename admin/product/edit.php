@@ -1,7 +1,9 @@
 <?php
 require __DIR__ . '/../../connection.php';
 require __DIR__ ."/../includes/header.php";
-require __DIR__ ."/../admin_access.php";
+if(!(require __DIR__ . '/../admin_access.php')) {
+	return;
+}
 require __DIR__ . '/../../includes/constants.php';
 
 if(!isset($_GET["id"]))
@@ -83,8 +85,9 @@ if(!isset($_GET["id"]))
 			oci_execute($stid);
 		}
 		else{
+			$location = "../../uploads/products/". basename($image["name"]);
 			$product_location = $upload_location . basename($product_image["name"]);
-			move_uploaded_file($product_image["tmp_name"], $product_location);
+			move_uploaded_file($product_image["tmp_name"], $location);
 
 			$sqlString = "UPDATE nepbuy_products SET ".
 			"NAME='$product_name',DESCRIPTION='$description',PRICE=$price,QUANTITY_PER_ITEM=$qty_per_item,STOCK_AVAILABLE=$stock_available,MIN_ORDER=$min_order,MAX_ORDER=$max_order,ALLERGY_INFO='$allergy_info',FK_SHOP_ID=$fk_shop_id,FK_PRODUCT_TYPE_ID=$product_type,PHOTO_LOCATION='$product_location' ".

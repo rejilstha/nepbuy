@@ -1,5 +1,8 @@
 <?php
 	require __DIR__ . '/../connection.php';
+	if(!(require __DIR__ . '/../trader_access.php')) {
+		return;
+	}
 	require __DIR__ . '/../includes/constants.php';
 
 	if(!isset($_GET["id"]))
@@ -8,13 +11,15 @@
 		return;
 	}
 
+	$trader = $_SESSION["user_session"];
+
 	// If submitted from edit form
 	if(isset($_POST["edit-product-submit"])) {
 		$product_image = $_FILES["product-image"];
 		edit_product(
 			$_POST["id"],$_POST["product-name"], $_POST["description"], $_POST["price"], 
 			$_POST["qty-per-item"], $_POST["stock-available"], $_POST["min-order"], 
-			$_POST["max-order"], $_POST["allergy-info"], $_POST["fk-shop-id"], 
+			$_POST["max-order"], $_POST["allergy-info"], 
 			$_POST["product-type"], $product_image, $PRODUCT_FILE_UPLOAD_LOCATION, $CONNECTION);
 	}
 
@@ -24,7 +29,7 @@
 		header("Location: products.php");
 	}
 
-	$product = get_product($_GET["id"], $CONNECTION);
+	$product = get_product($_GET["id"], $trader, $CONNECTION);
 	if($product == NULL)
 	{
 		echo "No product";
@@ -32,7 +37,6 @@
 	}
 
 	$product_types = get_product_types($CONNECTION);
-	$shops = get_shops($CONNECTION);
 
 	function delete_product($id, $connection) {
 		$sqlString = "DELETE FROM nepbuy_products WHERE PK_PRODUCT_ID = $id";
@@ -52,43 +56,39 @@
 		return $product_types;
 	}
 
-	function get_shops($connection) {
-		$sqlString = "SELECT * FROM nepbuy_shops";
-		$stid = oci_parse($connection, $sqlString);
-		oci_execute($stid);
-
-		$shops = array();
-		while($shop = oci_fetch_assoc($stid)) {
-			array_push($shops, $shop);
-		}
-		return $shops;	
-	}
-
 	function edit_product(
 		$id,
 		$product_name, $description, $price, $qty_per_item, $stock_available,
-		$min_order, $max_order, $allergy_info, $fk_shop_id, $product_type, $product_image, 
+		$min_order, $max_order, $allergy_info, $product_type, $product_image, 
 		$upload_location, $connection
 		) {
 
 		$min_order = ($min_order == '' ? "NULL" : $min_order);
 		$max_order = ($max_order == '' ? "NULL" : $max_order);
-		if($product_image["name"] == NULL)
-			$product_location = '';
-		else
-			$product_location = $upload_location . basename($product_image["name"]);
-
-		move_uploaded_file($product_image["tmp_name"], $product_location);
-
-		$sqlString = "UPDATE nepbuy_products SET ".
-					"NAME='$product_name',DESCRIPTION='$description',PRICE=$price,QUANTITY_PER_ITEM=$qty_per_item,STOCK_AVAILABLE=$stock_available,MIN_ORDER=$min_order,MAX_ORDER=$max_order,ALLERGY_INFO='$allergy_info',FK_SHOP_ID=$fk_shop_id,FK_PRODUCT_TYPE_ID=$product_type,PHOTO_LOCATION='$product_location' ".
+		if($product_image["name"] == '') {
+			$sqlString = "UPDATE nepbuy_products SET ".
+					"NAME='$product_name',DESCRIPTION='$description',PRICE=$price,QUANTITY_PER_ITEM=$qty_per_item,STOCK_AVAILABLE=$stock_available,MIN_ORDER=$min_order,MAX_ORDER=$max_order,ALLERGY_INFO='$allergy_info',FK_PRODUCT_TYPE_ID=$product_type ".
 					"WHERE PK_PRODUCT_ID = $id";
-		$stid = oci_parse($connection, $sqlString);
-		oci_execute($stid);
+			$stid = oci_parse($connection, $sqlString);
+			oci_execute($stid);
+		}
+		else{
+			$location = "../uploads/products/". basename($image["name"]);
+			$product_location = $upload_location . basename($product_image["name"]);
+			move_uploaded_file($product_image["tmp_name"], $location);
+
+			$sqlString = "UPDATE nepbuy_products SET ".
+						"NAME='$product_name',DESCRIPTION='$description',PRICE=$price,QUANTITY_PER_ITEM=$qty_per_item,STOCK_AVAILABLE=$stock_available,MIN_ORDER=$min_order,MAX_ORDER=$max_order,ALLERGY_INFO='$allergy_info',FK_PRODUCT_TYPE_ID=$product_type,PHOTO_LOCATION='$product_location' ".
+						"WHERE PK_PRODUCT_ID = $id";
+			$stid = oci_parse($connection, $sqlString);
+			oci_execute($stid);
+		}
 	}
 
-	function get_product($id, $connection) {
-		$sqlString = "SELECT * FROM nepbuy_products WHERE PK_PRODUCT_ID = $id";
+	function get_product($id, $trader, $connection) {
+		$sqlString = "SELECT * FROM nepbuy_products p ".
+					"JOIN nepbuy_shops s ON p.FK_SHOP_ID=s.PK_SHOP_ID ".
+					"WHERE s.FK_USER_ID=$trader AND p.PK_PRODUCT_ID = $id";
 		$stid = oci_parse($connection, $sqlString);
 		if(oci_execute($stid) > 0) {
 			return oci_fetch_assoc($stid);
@@ -106,21 +106,6 @@
 	<input name="min-order" type="number" value="<?php echo $product['MIN_ORDER']; ?>" placeholder="Min order">
 	<input name="max-order" type="number" value="<?php echo $product['MAX_ORDER']; ?>" placeholder="Max order">
 	<input name="allergy-info" type="text" value="<?php echo $product['ALLERGY_INFO']; ?>" placeholder="Allergy info">
-	<select name="fk-shop-id" required>
-		<?php
-		foreach ($shops as $shop) {
-			if($shop["PK_SHOP_ID"] == $product["FK_SHOP_ID"]) {
-			?>
-				<option selected value="<?php echo $shop["PK_SHOP_ID"]; ?>"><?php echo $shop["NAME"]; ?></option>
-			<?php
-			} else {
-			?>
-				<option value="<?php echo $shop["PK_SHOP_ID"]; ?>"><?php echo $shop["NAME"]; ?></option>
-			<?php
-			}
-		} 
-		?>
-	</select>
 	<select name="product-type" required>
 		<?php
 		foreach ($product_types as $product_type) {
@@ -136,7 +121,7 @@
 		} 
 		?>
 	</select>
-	<img src="<?php echo $product['PHOTO_LOCATION']; ?>">
+	<img src="<?php echo $product['PHOTO_LOCATION']; ?>" height="200px">
 	<input type="file" name="product-image" accept=".png,.jpg,.jpeg,.bmp,.gif">
 	<input type="submit" name="edit-product-submit" value="Edit product">
 </form>

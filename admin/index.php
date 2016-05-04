@@ -5,7 +5,7 @@
 	if(isset($_POST["admin-login-submit"])) {
 		$loggedin_user = login($_POST["username"], $_POST["password"], $CONNECTION);
 		if($loggedin_user == -1){
-			return; //404 (403 Unauthorized)
+			return; // (403 Unauthorized)
 		}
 	}
 	else if(isset($_POST["admin-logout-submit"])) {
@@ -14,7 +14,9 @@
 		header("Location: /nepbuy/admin/login.php");
 	}
 	else {
-		require __DIR__ . '/admin_access.php';
+		if(!(require __DIR__ . '/admin_access.php')) {
+			return;
+		}
 	}
 
 	function login($username, $password, $connection) {

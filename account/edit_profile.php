@@ -78,8 +78,9 @@ function edit_user($id, $name, $email, $contact, $image, $upload_location, $conn
 	}
 	else
 	{
+		$location = "../uploads/users/". basename($image["name"]);
 		$image_location = $upload_location . basename($image["name"]);
-		move_uploaded_file($image["tmp_name"], $image_location);
+		move_uploaded_file($image["tmp_name"], $location);
 
 		$sqlString = "UPDATE nepbuy_users SET ".
 		"NAME='$name',EMAIL='$email',CONTACT=$contact,PHOTO_LOCATION='$image_location' ".

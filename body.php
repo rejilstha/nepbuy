@@ -40,7 +40,9 @@
 			
 			// Update cart to the logged in user if 
 			// items were added to the cart anonymously
-			update_cart($user["PK_USER_ID"], $connection);
+			if(!is_trader($user["PK_USER_ID"], $connection)) {
+				update_cart($user["PK_USER_ID"], $connection);
+			}
 
 			// Update session variable for the logged in user.
 			$_SESSION["user_session"]=$user["PK_USER_ID"];
@@ -53,6 +55,21 @@
 		$result = oci_execute($stid);
 		if($result)
 			echo "Updated cart";
+	}
+
+	function is_trader($user_id, $connection) {
+		$sqlString = "SELECT COUNT(*) AS COUNT FROM nepbuy_user_roles ur ".
+					"JOIN nepbuy_roles r ON r.PK_ROLE_ID=ur.FK_ROLE_ID ".
+					"WHERE (r.NAME='Trader' OR r.NAME='Admin') AND ur.FK_USER_ID=$user_id";
+
+		$stid = oci_parse($connection, $sqlString);
+		if(oci_execute($stid) > 0) {
+			if(oci_fetch_assoc($stid)["COUNT"] > 0) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 ?>
 <section  id="hero-page1">
