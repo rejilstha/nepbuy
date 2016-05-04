@@ -1,107 +1,92 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>NepBuy</title>
-
-
 	
-	<!-- core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/font-awesome.min.css" rel="stylesheet">    
-    <link href="css/responsive.css" rel="stylesheet"> 
-     <link href="css/style.css" rel="stylesheet"> 
-  
-    <link rel="stylesheet" href="css/bootstrap-submenu.min.css">
-    <script type="text/javascript" src="js/jquery.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    
+	<!-- start: Meta -->
+	<meta charset="utf-8">
+	<title>Bootstrap Metro Dashboard by Dennis Ji for ARM demo</title>
+	<meta name="description" content="Bootstrap Metro Dashboard">
+	<meta name="author" content="Dennis Ji">
+	<meta name="keyword" content="Metro, Metro UI, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+	<!-- end: Meta -->
+	
+	<!-- start: Mobile Specific -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- end: Mobile Specific -->
+	
+	<!-- start: CSS -->
+	<link id="bootstrap-style" href="/nepbuy/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/nepbuy/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="/nepbuy/css/font-awesome.min.css" rel="stylesheet">
+	<link id="base-style" href="/nepbuy/css/style.css" rel="stylesheet">
+	<link id="base-style-responsive" href="/nepbuy/css/style-responsive.css" rel="stylesheet">
+	<link id="base-style-responsive" href="/nepbuy/css/main-style.css" rel="stylesheet">
+	<link id="base-style" href="/nepbuy/css/jquery.dataTables.min.css" rel="stylesheet">
+
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
+	<!-- end: CSS -->
 	
 
-	<!-- End WOWSlider.com HEAD section -->
-	<!-- GOOGLE fONTS-->
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300|Oswald:300|Oxygen' rel='stylesheet' type='text/css'>
-
-	</head><!--/head-->
+	<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+	  	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<link id="ie-style" href="css/ie.css" rel="stylesheet">
+	<![endif]-->
+	
+	<!--[if IE 9]>
+		<link id="ie9style" href="css/ie9.css" rel="stylesheet">
+	<![endif]-->
+		
+	<!-- start: Favicon -->
+	<link rel="shortcut icon" href="/nepbuy/img/favicon.ico">
+	<!-- end: Favicon -->
+	
+		
+		
+		
+</head>
 
 <body>
-	
-    <nav class="navbar navbar-inverse navbar-fixed-top" >
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Admin Dashboard</a>
-    </div>
-      <ul class="nav navbar-nav" style="font-size:10px !important">
-      <li ><a href="index.php">Home</a></li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Trader
-        <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="add_admin.php"  style="color:#000 !important;">Add Trader</a></li>
-          <li><a href="view_admin.php"  style="color:#000 !important;">View Trader</a></li>
-          
-        </ul>
-      </li>
-       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Shop
-        <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="add_shop.php"  style="color:#000 !important;">Add Shop</a></li>
-          <li><a href="view_shop.php"  style="color:#000 !important;">View Shop</a></li>
-          
-        </ul>
-      </li>
-       <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Category
-        <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="add_category.php"  style="color:#000 !important;">Add Category</a></li>
-          <li><a href="view_category.php"  style="color:#000 !important;">View Category</a></li>
-          
-        </ul>
-      </li>
-    <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Sub Category
-        <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="add_subcategory.php"  style="color:#000 !important;">Add SubCategory</a></li>
-          <li><a href="view_subcategory.php"  style="color:#000 !important;">View SubCategory</a></li>
-          
-        </ul>
-      </li>
-    <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Product
-        <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="add_product.php"  style="color:#000 !important;">Add Product</a></li>
-          <li><a href="view_product.php"  style="color:#000 !important;">View Product</a></li>
-          
-        </ul>
-      </li>
-      
-    </ul>
-     <ul class="nav navbar-nav navbar-right">
-  
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-user"></i>Username
-        <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="profile.php"  style="color:#000 !important;">Profile</a></li>
-          <li><a href="logout.php"  style="color:#000 !important;">Logout</a></li>
-          
-        </ul>
-      </li>
 
-    
-      
-    </ul>
 
-  </div>
-</nav>
-<br><br>
-<br><br><br>
+		<!-- start: Header -->
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href=""><span>Nep Buy</span></a>
+								
+				<!-- start: Header Menu -->
+				<div class="nav-no-collapse header-nav">
+					<ul class="nav pull-right">
+			
+						<!-- start: User Dropdown -->
+						<li class="dropdown">
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								<i class="white user"></i> Rejil Shrestha
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li class="dropdown-menu-title">
+ 									<span>Settings</span>
+								</li>
+								<li>
+									<form method="post" action="/nepbuy/admin/index.php">
+										<button name="admin-logout-submit" style="background:#FF8E35;color:#FFF;min-height:40px;width:100%" type="submit"><i class="icon-off">Logout</i></button>
+									</form>
+								</li>
+							</ul>
+						</li>
+						<!-- end: User Dropdown -->
+					</ul>
+				</div>
+				<!-- end: Header Menu -->
+				
+			</div>
+		</div>
+	</div>
+	<!-- start: Header -->

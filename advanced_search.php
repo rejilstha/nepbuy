@@ -1,5 +1,5 @@
 <?php
-	include("connection.php");
+	require_once __DIR__ ."/connection.php";
 	include("includes/header.php");
 
 	$results = array();
@@ -26,17 +26,17 @@
 
 	$product_types = get_product_types($CONNECTION);
 
-	function get_product_types($connection) {
-		$sqlString = "SELECT * FROM nepbuy_product_types WHERE FK_PARENT_ID IS NULL";
-		$stid = oci_parse($connection, $sqlString);
-		oci_execute($stid);
+	// function get_product_types($connection) {
+	// 	$sqlString = "SELECT * FROM nepbuy_product_types WHERE FK_PARENT_ID IS NULL";
+	// 	$stid = oci_parse($connection, $sqlString);
+	// 	oci_execute($stid);
 
-		$product_types = array();
-		while($product_type = oci_fetch_assoc($stid)) {
-			array_push($product_types, $product_type);
-		}
-		return $product_types;
-	}
+	// 	$product_types = array();
+	// 	while($product_type = oci_fetch_assoc($stid)) {
+	// 		array_push($product_types, $product_type);
+	// 	}
+	// 	return $product_types;
+	// }
 ?>
 
 <section id="hero-page1">

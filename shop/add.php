@@ -1,6 +1,7 @@
 <?php
 	require __DIR__ . "/../connection.php";
 	require __DIR__ . "/../includes/constants.php";
+	require __DIR__ . "/../includes/header.php";
 	//include("includes/header.php");
 
 	if(isset($_POST["create-shop-submit"])) {
@@ -53,24 +54,53 @@
 		return oci_fetch_assoc($stid)["PK_ROLE_ID"];
 	}
 ?>
+<section id="hero-page1">
+	<div class="row">
+		<div class="container">
+			<div class="col-sm-12">
 
-<div>
-	<form method="post" action="add.php">
-		<input name="name" type="text" value="" placeholder="Name of the shop" required>
-		<input name="location" type="text" value="" placeholder="Location">
-		<select name="trader" required>
-			<?php
-				foreach ($traders as $trader) {
-					?>
-					<option value="<?php echo $trader["PK_USER_ID"]; ?>"><?php echo $trader["NAME"]; ?></option>
-				 <?php 
-				} 
-				?>
-		</select>
-		<input type="submit" name="create-shop-submit" value="Create shop">
-	</form>
+				<div class="col-sm-4">
+					<img src="/nepbuy/images/img/veg.png" width="100%" >
+				</div>
+				<div class="col-sm-8">
+					<h2 class="title">NepBuy Introduction</h2>
+					<p class="text">Munchery chefs come from top restaurants. They bring mad skills, tons of passion, and expertise in a delicious array of cuisines. They insist, as we do, on using only the freshest ingredients to make our tasty, nourishing food.</p>
+				</div>	
+			</div>
+
+			
+		</div>
+
+	</div>            
+</section>	
+<div class="container-fluid">
+	<div class="row-fluid">
+		<form method="post" action="index.php">
+			<div class="form-group">
+				<label for="name">Shop</label>
+				<input class="form-control" name="name" type="text" value="" placeholder="Name of the shop" required>
+			</div>
+			<div class="form-group">
+				<label for="location">Location</label>
+				<input class="form-control" name="location" type="text" value="" placeholder="Location">
+			</div>
+			<div class="form-group">
+				<label for="trader">Trader</label>
+				<select class="form-control" name="trader" required>
+					<?php
+						foreach ($traders as $trader) {
+							?>
+							<option value="<?php echo $trader["PK_USER_ID"]; ?>"><?php echo $trader["NAME"]; ?></option>
+						 <?php 
+						} 
+						?>
+				</select>
+			</div>
+			<input class="btn btn-info" type="submit" name="create-shop-submit" value="Create shop">
+		</form>
+	</div>
 </div>
 
 <?php
-	//include(__DIR__."/../includes/footer.php");
+	include(__DIR__."/../includes/footer.php");
 ?>

@@ -47,7 +47,7 @@
 						<input class="inputfield0" placeholder="Username" name="username-email" type="text" />
 						<input class="inputfield0" placeholder="Password" name="password" type="password" />
 						<input class="btn-submit" type="submit" name="login" value="Login" />
-						<a href="/nepbuy/account/forgot_password.php">Forgot password?</a>
+						<a class="btn btn-default" href="/nepbuy/account/forgot_password.php">Forgot password?</a>
 				</form>
 			</div>
 

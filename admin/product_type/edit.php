@@ -1,8 +1,10 @@
 <?php
-	require __DIR__ . '/../connection.php';
+require __DIR__ . '/../../connection.php';
+require __DIR__ ."/../includes/header.php";
+require __DIR__ ."/../admin_access.php";
 
-	if(!isset($_GET["id"]))
-	{
+if(!isset($_GET["id"]))
+{
 		echo "No product type"; //404
 		return;
 	}
@@ -52,8 +54,8 @@
 		$parent_id = ($parent_id == '' ? "NULL" : $parent_id);
 
 		$sqlString = "UPDATE nepbuy_product_types SET ".
-					"NAME='$product_type_name',FK_PARENT_ID=$parent_id ".
-					"WHERE PK_PRODUCT_TYPE_ID = $id";
+		"NAME='$product_type_name',FK_PARENT_ID=$parent_id ".
+		"WHERE PK_PRODUCT_TYPE_ID = $id";
 		$stid = oci_parse($connection, $sqlString);
 		oci_execute($stid);
 	}
@@ -67,30 +69,62 @@
 	}
 ?>
 
-<form method="post">
-	<input name="id" type="hidden" value="<?php echo $product_t['PK_PRODUCT_TYPE_ID']; ?>">
-	<input name="product-type-name" type="text" value="<?php echo $product_t['NAME']; ?>" placeholder="Product type name" required>
-	<select name="fk-parent-id">
-		<option value="">None</option>
-		<?php
-		foreach ($product_types as $product_type) {
-			if($product_t["FK_PARENT_ID"] != '' && 
-				$product_type["PK_PRODUCT_TYPE_ID"] == $product_t["FK_PARENT_ID"]) {
-			?>
-				<option selected value="<?php echo $product_type["PK_PRODUCT_TYPE_ID"]; ?>"><?php echo $product_type["NAME"]; ?></option>		
-			<?php
-			} else {
-			?>
-				<option value="<?php echo $product_type["PK_PRODUCT_TYPE_ID"]; ?>"><?php echo $product_type["NAME"]; ?></option>
-			<?php 
-			}
-		} 
-		?>
-	</select>
-	<input type="submit" name="edit-product-type-submit" value="Edit product type">
-</form>
+<div class="container-fluid-full">
+	<div class="row-fluid">
 
-<form method="post">
-	<input name="id" type="hidden" value="<?php echo $product_t['PK_PRODUCT_TYPE_ID']; ?>">
-	<input type="submit" name="delete-product-type-submit" value="Delete">
-</form>
+		<?php require __DIR__.'/../includes/nav.php'; ?>
+
+		<!-- start: Content -->
+		<div id="content" class="span10">				
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home"></i>
+					<a href="index.html">Home</a>
+					<i class="icon-angle-right"></i>
+				</li>
+				<li><a href="index.php">Product types</a></li>
+			</ul>
+
+			<div class="row-fluid">
+				<form method="post">
+					<input name="id" type="hidden" value="<?php echo $product_t['PK_PRODUCT_TYPE_ID']; ?>">
+					<div class="form-group">
+						<label for="product-type-name">Product type</label>
+						<input class="form-control" name="product-type-name" type="text" value="<?php echo $product_t['NAME']; ?>" placeholder="Product type name" required>
+					</div>
+					<div class="form-group">
+						<label for="fk-parent-id">Parent</label>
+						<select name="fk-parent-id" class="form-control">
+							<option value="">None</option>
+							<?php
+							foreach ($product_types as $product_type) {
+								if($product_t["FK_PARENT_ID"] != '' && 
+									$product_type["PK_PRODUCT_TYPE_ID"] == $product_t["FK_PARENT_ID"]) {
+										?>
+										<option selected value="<?php echo $product_type["PK_PRODUCT_TYPE_ID"]; ?>"><?php echo $product_type["NAME"]; ?></option>		
+										<?php
+									} else {
+										?>
+										<option value="<?php echo $product_type["PK_PRODUCT_TYPE_ID"]; ?>"><?php echo $product_type["NAME"]; ?></option>
+										<?php 
+									}
+								} 
+								?>
+							</select>
+						</div>
+						<input class="add-btn" type="submit" name="edit-product-type-submit" value="Save product type" />
+					</form>
+					<form method="post" style="margin-top: 10px">
+							<input name="id" type="hidden" value="<?php echo $product_t['PK_PRODUCT_TYPE_ID']; ?>">
+						<button class="btn btn-danger" type="submit" name="delete-product-type-submit">Delete</button>
+						<a class="btn btn-default" href="index.php">Cancel</a>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php
+require __DIR__ ."/../includes/footer.php";
+?>

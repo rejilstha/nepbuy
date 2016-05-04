@@ -36,16 +36,18 @@
 		<h1 class="log-title">Sign Up</h1>
 			<form method ="post" action="body.php" class="signup-form">
 			<div>
-				<input class="inputfield" name="username" type="text" placeholder="Username"/>
+				<input required class="inputfield" name="name" type="text" placeholder="Name"/>
 			</div>
 			<div>
-				<input class="inputfield" name="emailAddress" type="email" placeholder="Email"/>
+				<input required class="inputfield" name="username" type="text" placeholder="Username"/>
 			</div>
 			<div>
-				<input class="inputfield" name="password" type="password" placeholder="Password"/>
+				<input required class="inputfield" name="emailAddress" type="email" placeholder="Email"/>
 			</div>
-				<input class="inputfield" name="contact" type="number" placeholder="Phone"/>
-				<input class="btn-submit" class="inputfield" type="submit" name="signup" value="Sign Up" />
+			<div>
+				<input required class="inputfield" name="password" type="password" placeholder="Password"/>
+			</div>
+			<input class="btn-submit" class="inputfield" type="submit" name="signup" value="Sign Up" />
 			</form>	
 	 	</div>
 	</div>

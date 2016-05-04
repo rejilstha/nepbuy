@@ -1,9 +1,13 @@
 <?php
 	include("connection.php");
-	include('includes/header.php'); 
+
+	if(isset($_POST["admin-logout-submit"])) {
+		//Logout
+		$_SESSION["user_session"] = trim(com_create_guid(), '{}');
+	}
+
+	include('includes/header.php');
 ?>
-
-
 
 <!-- slider -->
 <section>

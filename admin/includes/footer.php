@@ -1,7 +1,24 @@
-<!-- Footer -->
-<footer class="text-center">
-  <a class="up-arrow" href="#myPage" data-toggle="tooltip" title="TO TOP">
-    <span class="glyphicon glyphicon-chevron-up"></span>
-  </a><br><br>
-  <p>Designed by Team <a href="#" data-toggle="tooltip"> GAMMA </a> &copy; Copyright 2016</p> 
-</footer>
+<!-- start: JavaScript-->
+
+		<script src="/nepbuy/js/jquery-1.9.1.min.js"></script>
+
+
+		<script src="/nepbuy/js/bootstrap.min.js"></script>
+
+		<script src='/nepbuy/js/jquery.dataTables.min.js'></script>
+		<script type="text/javascript">
+			
+			$('.datatable').dataTable({ 
+                    processing: true,
+				    bInfo: false,
+                    iDisplayLength: 10,
+                    bLengthChange: true,
+                    dom: '<"top"i><"bottom"frtp><"clear">',})
+
+		</script>
+	
+
+	<!-- end: JavaScript-->
+	
+</body>
+</html>
