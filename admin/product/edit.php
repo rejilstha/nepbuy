@@ -1,9 +1,7 @@
 <?php
 require __DIR__ . '/../../connection.php';
+require __DIR__ . '/../admin_access.php';
 require __DIR__ ."/../includes/header.php";
-if(!(require __DIR__ . '/../admin_access.php')) {
-	return;
-}
 require __DIR__ . '/../../includes/constants.php';
 
 if(!isset($_GET["id"]))
@@ -85,7 +83,7 @@ if(!isset($_GET["id"]))
 			oci_execute($stid);
 		}
 		else{
-			$location = "../../uploads/products/". basename($image["name"]);
+			$location = "../../uploads/products/". basename($product_image["name"]);
 			$product_location = $upload_location . basename($product_image["name"]);
 			move_uploaded_file($product_image["tmp_name"], $location);
 

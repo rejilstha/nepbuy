@@ -1,9 +1,7 @@
 <?php
 require __DIR__ . '/../../connection.php';
+require __DIR__ . '/../admin_access.php';
 require __DIR__ ."/../includes/header.php";
-if(!(require __DIR__ . '/../admin_access.php')) {
-	return;
-}
 
 
 $product_types = get_product_types($CONNECTION);

@@ -1,13 +1,25 @@
+<?php 
+	require_once __DIR__ . '/../../connection.php';
+
+	$user_id = $_SESSION["user_session"];
+
+	function get_user($user, $connection) {
+		$sqlString = "SELECT * FROM nepbuy_users WHERE PK_USER_ID=$user";
+		$stid = oci_parse($connection, $sqlString);
+		oci_execute($stid);
+		return oci_fetch_assoc($stid);
+	}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	
 	<!-- start: Meta -->
 	<meta charset="utf-8">
-	<title>Bootstrap Metro Dashboard by Dennis Ji for ARM demo</title>
-	<meta name="description" content="Bootstrap Metro Dashboard">
-	<meta name="author" content="Dennis Ji">
-	<meta name="keyword" content="Metro, Metro UI, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+	<title>Nepbuy Admin Panel</title>
+	<meta name="description" content="Nepbuy Admin Panel">
 	<!-- end: Meta -->
 	
 	<!-- start: Mobile Specific -->
@@ -67,7 +79,13 @@
 						<!-- start: User Dropdown -->
 						<li class="dropdown">
 							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-								<i class="white user"></i> Rejil Shrestha
+								<i class="white user"></i> 
+								<?php
+									if(!preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $user_id)) {
+										$user = get_user($user_id, $CONNECTION);
+										echo $user["NAME"]; 
+									}
+								?>
 								<span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">

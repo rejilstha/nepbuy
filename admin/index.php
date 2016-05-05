@@ -14,9 +14,7 @@
 		header("Location: /nepbuy/admin/login.php");
 	}
 	else {
-		if(!(require __DIR__ . '/admin_access.php')) {
-			return;
-		}
+		require __DIR__ . '/admin_access.php';
 	}
 
 	function login($username, $password, $connection) {

@@ -11,8 +11,10 @@
 		// Check if trader
 		$user = $_SESSION["user_session"];
 
-		if(is_trader($user, $CONNECTION)) {
-			return true; //403 Unauthorized
+		if(!is_trader($user, $CONNECTION)) {
+			header('HTTP/1.0 403 Forbidden');
+			header("Location: /nepbuy/403.html");
+			exit;
 		}
 	}
 

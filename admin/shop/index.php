@@ -1,9 +1,7 @@
 <?php
 require __DIR__ . '/../../connection.php';
+require __DIR__ . '/../admin_access.php';
 require __DIR__ ."/../includes/header.php";
-if(!(require __DIR__ . '/../admin_access.php')) {
-	return;
-}
 
 	// Submitted from the add shop.
 if(isset($_POST["create-shop-submit"])) {
@@ -11,10 +9,20 @@ if(isset($_POST["create-shop-submit"])) {
 		$_POST["name"], $_POST["location"], $_POST["trader"], $_POST["status"], $CONNECTION);
 }
 
+if(isset($_POST["confirm-shop-submit"])) {
+	confirm_shop($_POST["shop-id"], $CONNECTION);
+}
+
 function add_shop(
 	$shop_name, $location, $trader, $status, $connection) {
 
 	$sqlString = "INSERT INTO nepbuy_shops(NAME,LOCATION,FK_USER_ID,STATUS) VALUES('$shop_name','$location',$trader,'$status')";
+	$stid = oci_parse($connection, $sqlString);
+	oci_execute($stid);
+}
+
+function confirm_shop($shop_id, $connection) {
+	$sqlString = "UPDATE nepbuy_shops SET STATUS='Verified' WHERE PK_SHOP_ID=$shop_id";
 	$stid = oci_parse($connection, $sqlString);
 	oci_execute($stid);
 }
@@ -59,6 +67,7 @@ if(oci_execute($stid) > 0) {
 							<th>Shop Owner</th>
 							<th>Status</th>
 							<th></th>
+							<th></th>
 						</tr>
 						<?php
 						while($row = oci_fetch_assoc($stid)) {
@@ -70,6 +79,18 @@ if(oci_execute($stid) > 0) {
 								<td><?php echo $trader['NAME']; ?></td>
 								<td><?php echo $row['STATUS']; ?></td>
 								<td><a class="btn btn-default" href="edit.php?id=<?php echo $row["PK_SHOP_ID"];?>"><i class="icon-edit"></i> Edit</a></td>
+								<td>
+									<?php 
+									if($row['STATUS'] != 'Verified') {
+										?>
+										<form method="post">
+											<input name="shop-id" type="hidden" value="<?php echo $row["PK_SHOP_ID"]; ?>" />
+											<input name="confirm-shop-submit" class="btn btn-default" type="submit" value="Confirm"/>
+										</form>
+									<?php
+									}
+									?>
+								</td>
 							</tr>
 							<?php
 						}

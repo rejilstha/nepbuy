@@ -1,8 +1,6 @@
 <?php
 require __DIR__ . "/../connection.php";
-if(!(require __DIR__ . '/../trader_access.php')) {
-	return;
-}
+require __DIR__ . '/../trader_access.php';
 require __DIR__ . "/../includes/header.php";
 
 $trader = $_SESSION["user_session"];

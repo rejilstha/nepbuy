@@ -153,10 +153,14 @@
 				<?php
 					if ($product["STOCK_AVAILABLE"] > 0)
 					{
+						// Trader shouldn't be able to add to cart.
 						if (!preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"])) {
 							
 							if(is_trader($_SESSION["user_session"], $CONNECTION)) {
 								// Trader shouldn't be allowed to checkout.
+								?>
+									<a class="btn btn-default" href="/nepbuy/product/edit.php?id=<?php echo $product["PK_PRODUCT_ID"]; ?>">Edit product</a>
+								<?php
 								return; //Not allowed
 							}
 						}
@@ -179,8 +183,9 @@
 					}
 					else {
 						echo "No stock available. Choose other product.";
-					}	
+					}
 				?>
+				<p><a class="btn btn-default" href="/nepbuy/shop/details.php?id=<?php echo $shop["PK_SHOP_ID"]; ?>">View shop</a></p>
 			</div>
 		</div>
 	</div>

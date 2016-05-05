@@ -3,13 +3,12 @@
 
 	if(isset($_POST["signup"])){
 		saveuser($_POST["name"], $_POST["username"], $_POST["emailAddress"], $_POST["password"], $CONNECTION);
+		header("Location: /nepbuy/index.php");
 	}
 	else if(isset($_POST["login"])) {
 		login($_POST["username-email"], $_POST["password"], $CONNECTION);
 		header("Location: /nepbuy/index.php");
 	}
-
-	include("includes/header.php");
 
 	function saveuser($name, $username, $emailAddress, $password, $connection) {
 		$sqlString = "INSERT INTO nepbuy_users(NAME,USERNAME,EMAIL,PASSWORD) VALUES('$name','$username','$emailAddress','md5($password)')";
@@ -72,10 +71,3 @@
 		return false;
 	}
 ?>
-<section  id="hero-page1">
-	<div>
-		This is body.
-	</div>
-</section>
-
-<?php include("includes/footer.php"); ?>

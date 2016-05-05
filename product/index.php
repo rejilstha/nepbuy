@@ -2,9 +2,7 @@
 	// List of all the products
 
 include("../connection.php");
-if(!(require __DIR__ . '/../trader_access.php')) {
-	return;
-}
+require __DIR__ . '/../trader_access.php';
 include("../includes/header.php");
 
 	// Submitted from the add product.

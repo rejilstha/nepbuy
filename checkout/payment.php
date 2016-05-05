@@ -1,10 +1,8 @@
 <?php
 	require __DIR__  . '/../PayPal-PHP-SDK/autoload.php';
-	require __DIR__."/../connection.php";
-	if(!(require __DIR__ . "/../user_access.php")) {
-		return;
-	}
-	require __DIR__."/../includes/constants.php";
+	require __DIR__ . "/../connection.php";
+	require __DIR__ . "/../user_access.php";
+	require __DIR__ . "/../includes/constants.php";
 
 	$apiContext = new \PayPal\Rest\ApiContext(
     	new \PayPal\Auth\OAuthTokenCredential(
@@ -123,7 +121,7 @@
 					"FK_COLLECTION_DAY_SLOT_ID=$day_slot_id AND STATUS='pending'";
 		$stid = oci_parse($connection, $sqlString);
 		if(oci_execute($stid) > 0) {
-			return (oci_fetch_assoc($stid)["COUNT"] == $max_delivery);
+			return (oci_fetch_assoc($stid)["COUNT"] >= $max_delivery);
 		}
 	}
 

@@ -1,9 +1,8 @@
 <?php
 require __DIR__ ."/../connection.php";
-if(!(require __DIR__ . '/../trader_access.php')) {
-	return;
-}
+require __DIR__ . '/../trader_access.php';
 require __DIR__ ."/../includes/header.php";
+require __DIR__ . "/../includes/constants.php";
 
 $trader = $_SESSION["user_session"];
 
@@ -20,7 +19,7 @@ function add_shop(
 	$stid = oci_parse($connection, $sqlString);
 	if(oci_execute($stid) > 0) {
 		$count = oci_fetch_assoc($stid)["COUNT"];
-		if($count == $max_shops_allowed) {
+		if($count >= $max_shops_allowed) {
 			echo "Max shop limit reached.";
 			return;
 		}
@@ -57,11 +56,15 @@ if(oci_execute($stid) > 0) {
 	</section>	
 	<div class="container-fluid">
 		<div class="row-fluid">
+			<div class="span12" onTablet="span12" onDesktop="span12">
+			<h2 class="headV">List Shops</h2>
+			<a class="btn btn-info" href="add.php"><i class="icon-plus"></i> Add New</a>
 			<table class="table table-striped">
 				<tr>
 					<th>Name</th>
 					<th>Location</th>
 					<th>Status</th>
+					<th></th>
 					<th></th>
 				</tr>
 				<?php
@@ -71,6 +74,7 @@ if(oci_execute($stid) > 0) {
 						<td><?php echo $row['NAME']; ?></td>
 						<td><?php echo $row['LOCATION']; ?></td>
 						<td><?php echo $row['STATUS']; ?></td>
+						<td><a class="btn btn-default" href="details.php?id=<?php echo $row["PK_SHOP_ID"]; ?>">Details</a></td>
 						<td><a class="btn btn-default" href="edit.php?id=<?php echo $row["PK_SHOP_ID"]; ?>">Edit</a></td>
 					</tr>
 					<?php

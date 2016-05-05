@@ -70,3 +70,5 @@
 			</div>            
 		</section>		
 		<!-- hero page  -->
+
+<?php require __DIR__ . '/../includes/footer.php'; ?>

@@ -1,10 +1,7 @@
 <?php
 require __DIR__ ."/../connection.php";
-if (!preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"])) {
-	if(is_trader($_SESSION["user_session"], $CONNECTION)) {
-		return;
-	}
-}
+
+require __DIR__ . "/../cart_access.php";
 include('../includes/header.php');
 
 $user_id = $_SESSION["user_session"];
@@ -19,21 +16,6 @@ if(isset($_POST["submit"])){
 }
 
 $cart_products = get_cart_products($user_id, $CONNECTION);
-
-function is_trader($user_id, $connection) {
-	$sqlString = "SELECT COUNT(*) AS COUNT FROM nepbuy_user_roles ur ".
-				"JOIN nepbuy_roles r ON r.PK_ROLE_ID=ur.FK_ROLE_ID ".
-				"WHERE (r.NAME='Trader') AND ur.FK_USER_ID=$user_id";
-
-	$stid = oci_parse($connection, $sqlString);
-	if(oci_execute($stid) > 0) {
-		if(oci_fetch_assoc($stid)["COUNT"] > 0) {
-			return true;
-		}
-	}
-
-	return false;
-}
 
 function update_qty($user_id, $product_id, $qty, $connection) {
 	if($qty < 0)
@@ -108,6 +90,7 @@ function get_product($product_id, $connection) {
 		<div class="container">
 
 			<div class="col-sm-12">
+				<h3>Shopping Cart</h3>
 				<table class="cart">
 					<div class="cart-item">
 						<h2><i class="fa fa-shopping-cart"></i><?php echo " ".count($cart_products)." items"; ?></h2>
@@ -134,7 +117,7 @@ function get_product($product_id, $connection) {
 									<td><?php echo $product["NAME"]; ?></td>
 									<td>Butcher</td>
 									<input name="pk_product_id" type="hidden" value="<?php echo $product["PK_PRODUCT_ID"]; ?>"/>
-									<td><input name= "qty" type="number" value="<?php echo $cart_product["PRODUCT_QUANTITY"];?>" min="<?php echo $product["MIN_ORDER"];?>" 
+									<td><input class="inputfield" name= "qty" type="number" value="<?php echo $cart_product["PRODUCT_QUANTITY"];?>" min="<?php echo $product["MIN_ORDER"];?>" 
 										max="<?php 
 										if (isset($product['MAX_ORDER']) && $product['MAX_ORDER'] > $product['STOCK_AVAILABLE']) 
 											echo $product['STOCK_AVAILABLE'];
@@ -161,8 +144,8 @@ function get_product($product_id, $connection) {
 										</a>
 									</td> -->
 									<td>
-										<input name="submit" type="submit" value="update"/>
-										<input name="submit" type="submit" value="remove"/>
+										<input class="btn btn-info" name="submit" type="submit" value="update"/>
+										<input class="btn btn-danger" name="submit" type="submit" value="remove"/>
 									</td>
 								</form>
 
@@ -215,68 +198,6 @@ function get_product($product_id, $connection) {
 	</div>            
 </section>		
 <!-- hero page  -->
-<?php 
-// include('includes/footer.php'); 
-?>
 <?php
-$total = 0;
-foreach ($cart_products as $cart_product) {
-	$product = get_product($cart_product["FK_PRODUCT_ID"], $CONNECTION);
-	?>	
-	<div>
-		<div>
-			<?php
-			echo $product["PHOTO_LOCATION"];
-			?>
-		</div>
-		<div>
-			Product Name:
-			<?php
-			echo $product["NAME"];
-			?>
-		</div>
-		<div>
-			Product Price:
-			<?php
-			echo $product["PRICE"];
-			?>
-		</div>
-		<div>
-			Quantity:
-			<?php
-			echo $cart_product["PRODUCT_QUANTITY"];
-			?>
-		</div>
-		<div>
-			Sub-Total:
-			<?php
-			echo floatval($product["PRICE"])*intval($cart_product["PRODUCT_QUANTITY"]);
-			$total+=floatval($product["PRICE"])*intval($cart_product["PRODUCT_QUANTITY"]);
-			?>
-		</div>
-		<div>
-			<form method="post">
-				<input name="pk_product_id" type="hidden" value="<?php echo $product["PK_PRODUCT_ID"]; ?>"/>
-				<input name= "qty" type="number" value="<?php echo $cart_product["PRODUCT_QUANTITY"];?>" min="<?php echo $product["MIN_ORDER"];?>" max="<?php echo $product["MAX_ORDER"];?>"/>
-				<input name="submit" type="submit" value="update"/>
-			</form>
-		</div>
-		<div>
-			<form method="post">
-				<input name="pk_product_id" type="hidden" value="<?php echo $product["PK_PRODUCT_ID"]; ?>"/>
-				<input name="submit" type="submit" value="remove"/>
-			</form>
-		</div>
-	</div>	
-	<?php
-}
+	require __DIR__ . '/../includes/footer.php';
 ?>
-<div>
-	Total:
-	<?php
-	echo $total;
-	?>
-	<form method="post" action="delivery.php">
-		<input name="submit" type="submit" value="checkout"/>
-	</form>
-</div>
