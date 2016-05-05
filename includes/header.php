@@ -149,101 +149,109 @@ function is_trader_or_admin($user_id, $connection) {
           ?>
         </ul>
       </div>
-      <!--endmyprofile-->
-      <div class="col-sm-3 col-md-3 pull-right">
-       <a href="#">
-        <form class="navbar-form" role="search" action="/nepbuy/advanced_search.php">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search" name="q" id="srch-term" style="height: 25px; margin-top: 23px;">
-            <select class="form-control" name="category">
-              <option value="all-categories">All categories</option>
-              <?php
-              foreach ($product_types as $product_type) {
+
+
+      <div class="row">
+        <!--endmyprofile-->
+        <div class="col-sm-5 col-md-5 pull-right" style="margin-top: 19px">
+         <a href="#">
+          <form class="navbar-form" role="search" action="/nepbuy/advanced_search.php">
+            <div class="col-sm-6">
+              <input type="text" class="form-control" placeholder="Search" name="q" >
+            </div>
+            <div class="col-sm-4">
+              <select class="form-control" name="category">
+                <option value="all-categories">All categories</option>
+                <?php
+                foreach ($product_types as $product_type) {
+                  ?>
+                  <option value="<?php echo $product_type['PK_PRODUCT_TYPE_ID']; ?>"><?php echo $product_type["NAME"]; ?></option>
+                  <?php       
+                }
                 ?>
-                <option value="<?php echo $product_type['PK_PRODUCT_TYPE_ID']; ?>"><?php echo $product_type["NAME"]; ?></option>
-                <?php       
+              </select>
+            </div>
+            <div class="col-sm-2">
+              <button class="btn btn-default btn-xs" type="submit"><i class="glyphicon glyphicon-search" style="margin-top: 10px; height: 20px;"></i></button>
+            </div>
+          </form>
+        </a>
+      </div>
+
+
+      <div class="collapse navbar-collapse navbar-right col-sm-5 col-md-5">
+
+        <ul class="nav navbar-nav">
+          <li class="scroll"><a href="/nepbuy/index.php">Home</a></li>
+
+          <li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">All Categories <b class="caret"></b></a>
+            <ul class="dropdown-menu multi-level">
+
+              <?php 
+              foreach ($product_types as $product_type) {
+                $child_product_types = get_child_product_types($product_type["PK_PRODUCT_TYPE_ID"], $CONNECTION);
+                if(count($child_product_types) == 0) {
+                  ?>
+                  <li>
+                    <a href="/nepbuy/product_type/details.php?id=<?php echo $product_type["PK_PRODUCT_TYPE_ID"]; ?>"><?php echo $product_type["NAME"]; ?></a>
+                  </li>
+                  <?php
+                } else {
+                  ?>
+                  <li class="dropdown-submenu">
+                    <a href="/nepbuy/product_type/details.php?id=<?php echo $product_type["PK_PRODUCT_TYPE_ID"]; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $product_type["NAME"]; ?></a>
+                    <ul>
+                      <li>
+                        <?php
+                        foreach ($child_product_types as $child_product_type) {
+                          ?>
+                          <a href="/nepbuy/product_type/details.php?id=<?php echo $child_product_type["PK_PRODUCT_TYPE_ID"]; ?>"><?php echo $child_product_type["NAME"]; ?></a>
+                          <?php
+                        }
+                        ?>
+                      </li>
+                    </ul>
+                  </li>
+                  <?php
+                }
               }
               ?>
-            </select>
-            <div class="input-group-btn">
-              <button class="btn btn-default btn-xs" type="submit"><i class="glyphicon glyphicon-search" style="margin-top: 23px; height: 20px;"></i></button>
-            </div>
-          </div>
-        </form>
-      </a>
-    </div>
-    <div class="collapse navbar-collapse navbar-right">
-
-      <ul class="nav navbar-nav">
-        <li class="scroll"><a href="/nepbuy/index.php">Home</a></li>
-
-        <li>
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">All Categories <b class="caret"></b></a>
-          <ul class="dropdown-menu multi-level">
-
-            <?php 
-            foreach ($product_types as $product_type) {
-              $child_product_types = get_child_product_types($product_type["PK_PRODUCT_TYPE_ID"], $CONNECTION);
-              if(count($child_product_types) == 0) {
-                ?>
-                <li>
-                  <a href="/nepbuy/product_type/details.php?id=<?php echo $product_type["PK_PRODUCT_TYPE_ID"]; ?>"><?php echo $product_type["NAME"]; ?></a>
-                </li>
-                <?php
-              } else {
-                ?>
-                <li class="dropdown-submenu">
-                  <a href="/nepbuy/product_type/details.php?id=<?php echo $product_type["PK_PRODUCT_TYPE_ID"]; ?>" class="dropdown-toggle" data-toggle="dropdown"><?php echo $product_type["NAME"]; ?></a>
-                  <ul>
-                    <li>
-                      <?php
-                      foreach ($child_product_types as $child_product_type) {
-                        ?>
-                        <a href="/nepbuy/product_type/details.php?id=<?php echo $child_product_type["PK_PRODUCT_TYPE_ID"]; ?>"><?php echo $child_product_type["NAME"]; ?></a>
-                        <?php
-                      }
-                      ?>
-                    </li>
-                  </ul>
-                </li>
+            </ul>
             <?php
-              }
+            if (preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"]) || !is_trader_($_SESSION["user_session"], $CONNECTION)) {
+              ?>
+              <li class="scroll"><a href="/nepbuy/checkout/cart.php">Cart</a></li>
+              <?php
+            } 
+            if(!preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"]) && is_trader_or_admin($_SESSION["user_session"], $CONNECTION)) {
+              ?>
+              <li class="scroll"><a href="/nepbuy/shop/index.php">Shops</a></li>
+              <li class="scroll">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/nepbuy/reports/delivered.php">Delivered</a></li> 
+                  <li><a href="/nepbuy/reports/pending.php">Pending</a></li> 
+                  <li><a href="/nepbuy/reports/sales.php">Sales</a></li> 
+                  <li><a href="/nepbuy/reports/stock_levels.php">Stock levels</a></li>
+                </ul>
+              </li>
+              <?php
+            }
+            ?>
+
+            <?php
+            if(preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"])) {
+              ?>
+              <li class="scroll"><a href="/nepbuy/account/login.php">Login</a></li>
+              <li class="scroll"><a href="/nepbuy/account/signup.php">Signup</a></li>
+              <?php
             }
             ?>
           </ul>
-        <?php
-        if (preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"]) || !is_trader_($_SESSION["user_session"], $CONNECTION)) {
-          ?>
-          <li class="scroll"><a href="/nepbuy/checkout/cart.php">Cart</a></li>
-          <?php
-        } 
-        if(!preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"]) && is_trader_or_admin($_SESSION["user_session"], $CONNECTION)) {
-          ?>
-          <li class="scroll"><a href="/nepbuy/shop/index.php">Shops</a></li>
-          <li class="scroll">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><a href="/nepbuy/reports/delivered.php">Delivered</a></li> 
-              <li><a href="/nepbuy/reports/pending.php">Pending</a></li> 
-              <li><a href="/nepbuy/reports/sales.php">Sales</a></li> 
-              <li><a href="/nepbuy/reports/stock_levels.php">Stock levels</a></li>
-            </ul>
-          </li>
-          <?php
-        }
-        ?>
-        
-        <?php
-        if(preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/', $_SESSION["user_session"])) {
-          ?>
-          <li class="scroll"><a href="/nepbuy/account/login.php">Login</a></li>
-          <li class="scroll"><a href="/nepbuy/account/signup.php">Signup</a></li>
-          <?php
-        }
-        ?>
-      </ul>
-    </div>
-  </div><!--/.container-->
-</nav><!--/nav-->
+        </div>
+      </div>
+    </div><!--/.container-->
+  </nav><!--/nav-->
 </header>
 <!--/header-->
