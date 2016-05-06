@@ -25,7 +25,7 @@ if(isset($_POST["edit-product-submit"])) {
 // If submitted from delete form
 if(isset($_POST["delete-product"])) {
 	delete_product($_POST["id"], $CONNECTION);
-	header("Location: products.php");
+	header("Location: index.php");
 }
 
 $product = get_product($_GET["id"], $trader, $CONNECTION);

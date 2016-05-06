@@ -35,7 +35,7 @@ function get_shops($trader, $connection) {
 <section id="special-offer">		
 	<div class="row">
 		<div class="container">	
-			<form method="post" action="products.php">
+			<form method="post" action="index.php">
 				<div class="form-group">
 					<label for="product-name">Product</label>
 					<input class="form-control" name="product-name" type="text" value="" placeholder="Product name" required>
